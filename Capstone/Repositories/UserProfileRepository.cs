@@ -105,7 +105,7 @@ namespace Capstone.Repositories
                     SELECT up.Id, up.FirstName,up.LastName, up.Email, up.RoleId, r.Role  
                                FROM UserProfile up
                                LEFT JOIN Role r ON r.Id = up.RoleId
-                    WHERE up.FirebaseUserId = @Id";
+                    WHERE up.FireBaseId = @Id";
                     DbUtils.AddParameter(cmd, "@Id", fBId);
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
