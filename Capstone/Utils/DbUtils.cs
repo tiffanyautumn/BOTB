@@ -5,6 +5,14 @@ namespace Capstone.Utils
 {
     public static class DbUtils
     {
+        public static Boolean GetBoolean(SqlDataReader reader, string column)
+        {
+            return reader.GetBoolean(reader.GetOrdinal(column));
+        }
+        public static decimal GetDecimal(SqlDataReader reader, string column)
+        {
+            return reader.GetDecimal(reader.GetOrdinal(column));
+        }
         /// <summary>
         ///  Get a string from a data reader object and gracefully handle NULL values
         /// </summary>
