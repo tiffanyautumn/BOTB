@@ -4,8 +4,9 @@ import { Button } from "reactstrap"
 import { getAllProducts } from "../../modules/productManager"
 import { Product } from "./Product"
 
-export const ProductList = () => {
+export const ProductList = ({ isAdmin, isApproved, searchTermState }) => {
     const [products, setProducts] = useState([])
+    const [filteredProducts, setFiltered] = useState([])
     const navigate = useNavigate()
 
     const getProducts = () => {
@@ -16,15 +17,33 @@ export const ProductList = () => {
         getProducts();
     }, []);
 
+    useEffect(() => {
+        getSearchedProducts(searchTermState);
+    },
+        [searchTermState]
+    )
 
+    const getSearchedProducts = (searchTerm) => {
+        fetch(`/api/product/search?q=${searchTerm}`)
+            .then(res => res.json())
+            .then((p) => {
+                setFiltered(p)
+            })
+    }
     return (
         <div className="container">
-            <Button onClick={() => navigate('/product/create')}>Create a Product</Button>
-            <div className="row justify-content-center">
-                {products.map((product) => (
-                    <Product product={product} key={product.id} />
+
+
+            <div className="row ">
+                {filteredProducts.map((product) => (
+                    <Product product={product} key={product.id} isAdmin={isAdmin} />
                 ))}
             </div>
+            {
+                isAdmin
+                    ? <Button onClick={() => navigate('/product/create')}>Create a Product</Button>
+                    : ""
+            }
         </div>
     )
 }

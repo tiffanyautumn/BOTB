@@ -33,7 +33,7 @@ export const ProductForm = () => {
             name: product.name,
             brand: product.brand,
             typeId: parseInt(product.typeId),
-            price: parseFloat(product.price),
+            price: parseFloat(product.price).toFixed(2),
             imageUrl: product.imageUrl
         }
 
@@ -122,6 +122,7 @@ export const ProductForm = () => {
                                     updateProduct(copy)
                                 }
                             }>
+                            <option>choose a type</option>
                             {types.map((t) => (
                                 <option value={t.id} key={t.id}>{t.name}</option>
                             ))}

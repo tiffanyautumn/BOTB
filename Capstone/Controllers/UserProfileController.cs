@@ -1,7 +1,9 @@
-﻿using Capstone.Repositories;
+﻿using Capstone.Models;
+using Capstone.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Capstone.Controllers
 {
@@ -37,6 +39,23 @@ namespace Capstone.Controllers
                 return NotFound();
             }
             return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult Post(UserProfile profile)
+        {
+            profile.RoleId = 3;
+            try
+            {
+                _userProfileRepository.Add(profile);
+                return CreatedAtAction (nameof(GetUserProfile),
+                new { firebaseUserId = profile.FirebaseUserId },
+                profile);
+            }
+           catch(Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

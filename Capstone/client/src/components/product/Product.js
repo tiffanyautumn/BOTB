@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Button, Card, CardBody, CardImg, Col } from "reactstrap";
+import { Button, Card, CardBody, CardImg, CardText, Col } from "reactstrap";
 import { NavLink as RRNavLink } from "react-router-dom";
 
 export const Product = ({ product }) => {
@@ -16,7 +16,6 @@ export const Product = ({ product }) => {
 
                     <p>{product?.brand}</p>
                     <Button onClick={() => navigate(`/product/${product?.id}`)}>{product?.name}</Button>
-                    <p>${product.price}</p>
 
                 </CardBody>
             </Col>
