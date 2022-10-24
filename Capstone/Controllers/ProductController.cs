@@ -2,6 +2,7 @@
 using Capstone.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Capstone.Controllers
 {
@@ -31,8 +32,23 @@ namespace Capstone.Controllers
         [HttpPost]
         public IActionResult Post(Product product)
         {
-            _productRepository.AddProduct(product);
-            return CreatedAtAction("Get", new { id = product.Id }, product);
+            try
+            {
+                _productRepository.AddProduct(product);
+                return CreatedAtAction("Get", new { id = product.Id }, product);
+            }
+            catch(Exception)
+            {
+                return BadRequest();
+            }
+           
+           
+        }
+
+        [HttpGet("search")]
+        public IActionResult Search(string q)
+        {
+            return Ok(_productRepository.Search(q));
         }
 
         [HttpPut("{id}")]

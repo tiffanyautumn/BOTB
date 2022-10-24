@@ -10,6 +10,8 @@ namespace Capstone.Repositories
         void UpdateProduct(Product product);
         void AddProduct(Product product);
         void DeleteProduct(int id);
+        List<Product> Search(string criterion);
+
 
     }
 }

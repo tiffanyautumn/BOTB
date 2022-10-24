@@ -11,14 +11,14 @@ import {
 } from 'reactstrap';
 import { logout } from '../modules/authManager';
 
-export default function Header({ isLoggedIn, isAdmin }) {
+export default function Header({ isLoggedIn, isAdmin, isApproved }) {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
     return (
         <div>
             <Navbar color="light" light expand="md">
-                <NavbarBrand tag={RRNavLink} to="/">Tabloid</NavbarBrand>
+                <NavbarBrand tag={RRNavLink} to="/">BOTB</NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="mr-auto" navbar>
@@ -31,8 +31,19 @@ export default function Header({ isLoggedIn, isAdmin }) {
                                 <NavItem>
                                     <NavLink tag={RRNavLink} to="/product">Products</NavLink>
                                 </NavItem>
+                                <NavItem>
+                                    <NavLink tag={RRNavLink} to="/ingredient">Ingredients</NavLink>
+                                </NavItem>
 
                             </>
+                        }
+                        {isAdmin &&
+                            <>
+                                <NavItem>
+                                    <NavLink tag={RRNavLink} to="/type">Types</NavLink>
+                                </NavItem>
+                            </>
+
                         }
                     </Nav>
                     <Nav navbar>

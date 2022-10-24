@@ -82,11 +82,14 @@ namespace Capstone.Repositories
                     cmd.CommandText = @"
                        SELECT p.Id, p.Name, p.Brand, p.TypeId, p.Price, p.ImageUrl, t.Type, 
                               pi.Id as PIId, pi.IngredientId, pi.Active, pi.[Use],
-                              i.Name as IName, i.SafetyInfo
+                              i.Name as IName, i.SafetyInfo,
+                              ir.Id AS ReviewId, ir.RateId, r.Rating
                        FROM Product p
                        LEFT JOIN Type t ON p.TypeId = t.Id
                        LEFT JOIN ProductIngredient pi ON pi.ProductId = p.Id
                        LEFT JOIN Ingredient i ON i.Id = pi.IngredientId
+                       LEFT JOIN IngredientReview ir ON ir.IngredientId = i.Id
+                       LEFT JOIN Rate r ON r.Id = ir.RateId
                        WHERE p.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -102,7 +105,8 @@ namespace Capstone.Repositories
                             }
                             if (DbUtils.IsNotDbNull(reader, "PIId"))
                             {
-                                product.ProductIngredients.Add(new ProductIngredient()
+                                ProductIngredient productIngredient = null;
+                                product.ProductIngredients.Add( productIngredient = new ProductIngredient()
                                 {
                                     Id = DbUtils.GetInt(reader, "PIId"),
                                     IngredientId = DbUtils.GetInt(reader, "IngredientId"),
@@ -114,9 +118,23 @@ namespace Capstone.Repositories
                                     },
                                     ProductId = id,
                                     Active = DbUtils.GetBoolean(reader, "Active"),
-                                    Use = DbUtils.GetString(reader, "Use")
+                                    Use = DbUtils.GetString(reader, "Use"),
+                                    
 
                                 });
+                            if(DbUtils.IsNotDbNull(reader, "ReviewId"))
+                            {
+                                    productIngredient.Ingredient.IngredientReview = new IngredientReview()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "ReviewId"),
+                                        Rate = new Rate()
+                                        {
+                                            Id = DbUtils.GetInt(reader, "RateId"),
+                                            Rating = DbUtils.GetString(reader, "Rating")
+                                        }
+
+                                    };
+                            }
                             }
                         }
                             
@@ -140,10 +158,10 @@ namespace Capstone.Repositories
                     cmd.CommandText = @"
                             UPDATE Product
                             SET 
-                                Name = @name
-                                Brand = @brand
-                                TypeId = @typeId
-                                Price = @price
+                                [Name] = @name,
+                                Brand = @brand,
+                                TypeId = @typeId,
+                                Price = @price,
                                 ImageUrl = @imageUrl
                             WHERE Id = @id";
 
@@ -198,6 +216,41 @@ namespace Capstone.Repositories
                 }
             }
         }
+
+        public List<Product> Search(string criterion)
+        {
+            using(SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using(var cmd = conn.CreateCommand())
+                {
+                    var sql = @"
+                    SELECT p.Id, p.[Name], p.Brand, p.TypeId, p.Price, p.ImageUrl
+                    FROM Product p
+                    WHERE p.[Name] LIKE @Criterion OR p.Brand LIKE @Criterion";
+                    cmd.CommandText = sql;
+                    DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var products = new List<Product>();
+                        while(reader.Read())
+                        {
+                            products.Add(new Product()
+                            {
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                Brand = DbUtils.GetString(reader, "Brand"),
+                                Price = DbUtils.GetDecimal(reader, "Price"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                TypeId = DbUtils.GetInt(reader, "TypeId"),
+                            });
+                        }
+                        return products;
+                    }
+                }
+            }
+        }
+
 
         private Product NewProductFromReader(SqlDataReader reader)
         {

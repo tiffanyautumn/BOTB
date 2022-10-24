@@ -25,3 +25,14 @@ export const deleteProduct = (id) => {
         method: "DELETE",
     })
 }
+
+export const editProduct = (id, product) => {
+    return fetch(baseUrl + `/${id}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+    })
+
+}

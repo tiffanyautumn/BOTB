@@ -38,5 +38,25 @@ namespace Capstone.Repositories
                 }
             }
         }
+
+        public void AddType(Type type)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO Type ([Type])
+                    OUTPUT INSERTED.Id
+                    VALUES (@type)";
+                    DbUtils.AddParameter(cmd, "@type", type.Name);
+                   
+                    int newlyCreatedId = (int)cmd.ExecuteScalar();
+                    type.Id = newlyCreatedId;
+                }
+            }
+        }
+
     }
 }

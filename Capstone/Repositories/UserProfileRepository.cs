@@ -136,6 +136,29 @@ namespace Capstone.Repositories
                 }
             }
         }
+
+        public void Add(UserProfile profile)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO UserProfile (FirstName, LastName, Email, RoleId, FireBaseId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@FirstName, @LastName, @Email, @RoleId, @FireBaseUserId)";
+
+                    DbUtils.AddParameter(cmd, "@FirstName", profile.FirstName);
+                    DbUtils.AddParameter(cmd, "@LastName", profile.LastName);
+                    DbUtils.AddParameter(cmd, "@Email", profile.Email);
+                    DbUtils.AddParameter(cmd, "@RoleId", profile.RoleId);
+                    DbUtils.AddParameter(cmd, "@FireBaseUserId", profile.FirebaseUserId);
+
+                    profile.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
     }
 }
 
