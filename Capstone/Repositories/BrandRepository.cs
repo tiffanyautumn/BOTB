@@ -1,16 +1,16 @@
-﻿using Capstone.Models;
-using Capstone.Utils;
+﻿using Capstone.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using Capstone.Models;
 
 namespace Capstone.Repositories
 {
-    public class TypeRepository : BaseRepository, ITypeRepository
+    public class BrandRepository : BaseRepository, IBrandRepository
     {
-        public TypeRepository(IConfiguration configuration) : base(configuration) { }
+        public BrandRepository(IConfiguration configuration) : base(configuration) { }
 
-        public List<Type> GetAll()
+        public List<Brand> GetAll()
         {
             using (var conn = Connection)
             {
@@ -19,27 +19,27 @@ namespace Capstone.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT Name, Id
-                        From [Type]";
+                        From Brand";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        var types = new List<Type>();
+                        var brands = new List<Brand>();
                         while (reader.Read())
                         {
-                            types.Add(new Type()
+                            brands.Add(new Brand()
                             {
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
                             });
                         }
                         reader.Close();
-                        return types;
+                        return brands;
                     }
                 }
             }
         }
 
-        public void AddType(Type type)
+        public void AddBrand(Brand brand)
         {
             using (SqlConnection conn = Connection)
             {
@@ -47,16 +47,15 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO Type ([Name])
+                    INSERT INTO Brand ([Name])
                     OUTPUT INSERTED.Id
                     VALUES (@name)";
-                    DbUtils.AddParameter(cmd, "@name", type.Name);
-                   
+                    DbUtils.AddParameter(cmd, "@name", brand.Name);
+
                     int newlyCreatedId = (int)cmd.ExecuteScalar();
-                    type.Id = newlyCreatedId;
+                    brand.Id = newlyCreatedId;
                 }
             }
         }
-
     }
 }

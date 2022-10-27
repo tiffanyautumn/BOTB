@@ -1,0 +1,11 @@
+.panel-item {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e1ded9;
+}
+
+.title {
+    display: block;
+    font-family: RalewaySemiBold, sans-serif;
+    font-weight: 600;
+    padding-bottom: 9px;
+}

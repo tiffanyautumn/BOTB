@@ -18,7 +18,7 @@ namespace Capstone.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT i.Name, i.[Function], i.SafetyInfo, i.Id,
+                       SELECT i.Name, i.Id, i.ImageUrl,
                               ir.RateId, ir.Id AS IrId, r.Rating
                        FROM Ingredient i
                        LEFT JOIN IngredientReview ir ON ir.IngredientId = i.Id
@@ -35,8 +35,7 @@ namespace Capstone.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
-                                Function = DbUtils.GetString(reader, "Function"),
-                                SafetyInfo = DbUtils.GetString(reader, "SafetyInfo"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl")
 
                             };
                             if (DbUtils.IsNotDbNull(reader, "IrId"))
@@ -74,13 +73,21 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT i.Name, i.[Function], i.SafetyInfo, i.Id,
-                              ir.RateId, ir.Id AS IrId, ir.UserId, ir.Review, ir.Source, ir.DateReviewed,
+                       SELECT i.Name, i.Id,i.ImageUrl,
+                              ir.RateId, ir.Id AS IrId, ir.UserProfileId, ir.Review, ir.DateReviewed,
+                              s.Link, s.Id AS SourceId,
+                              u.Id AS UseId, u.Description,
+                              ih.Id AS IHId, ih.[Case],
+                              h.Id AS HId, h.Name AS HName, H.Description AS HDescription,
                               up.FirstName, up.LastName,
                               r.Rating
                        FROM Ingredient i
                        LEFT JOIN IngredientReview ir ON ir.IngredientId = i.Id
-                       LEFT JOIN UserProfile up ON up.Id = ir.UserId
+                       LEFT JOIN Source s ON s.IngredientReviewId = ir.Id
+                       LEFT JOIN UserProfile up ON up.Id = ir.UserProfileId
+                       LEFT JOIN IngredientHazard ih ON ih.IngredientId = i.Id
+                       LEFT JOIN Hazard h ON ih.HazardId = h.Id
+                       LEFT JOIN [Use] u ON u.IngredientId = i.Id
                        LEFT JOIN Rate r ON r.Id = ir.RateId
                        WHERE i.Id = @id";
 
@@ -97,8 +104,9 @@ namespace Capstone.Repositories
                                 {
                                     Id = DbUtils.GetInt(reader, "Id"),
                                     Name = DbUtils.GetString(reader, "Name"),
-                                    Function = DbUtils.GetString(reader, "Function"),
-                                    SafetyInfo = DbUtils.GetString(reader, "SafetyInfo"),
+                                    ImageUrl= DbUtils.GetString(reader, "ImageUrl"),
+                                    Uses = new List<Use>(),
+                                    Hazards = new List<Models.IngredientHazard>()
 
                                 };
                                 if (DbUtils.IsNotDbNull(reader, "IrId"))
@@ -108,13 +116,12 @@ namespace Capstone.Repositories
                                         Id = DbUtils.GetInt(reader, "IrId"),
                                         IngredientId = DbUtils.GetInt(reader, "Id"),
                                         RateId = DbUtils.GetInt(reader, "RateId"),
-                                        UserId = DbUtils.GetInt(reader, "UserId"),
+                                        UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                                         Review = DbUtils.GetString(reader, "Review"),
-                                        Source = DbUtils.GetString(reader, "Source"),
                                         DateReviewed = DbUtils.GetDateTime(reader, "DateReviewed"),
                                         UserProfile = new UserProfile()
                                         {
-                                            Id = DbUtils.GetInt(reader, "UserId"),
+                                            Id = DbUtils.GetInt(reader, "UserProfileId"),
                                             FirstName = DbUtils.GetString(reader, "FirstName"),
                                             LastName = DbUtils.GetString(reader, "LastName")
                                         },
@@ -122,8 +129,42 @@ namespace Capstone.Repositories
                                         {
                                             Id = DbUtils.GetInt(reader, "RateId"),
                                             Rating = DbUtils.GetString(reader, "Rating")
-                                        }
+                                        },
+                                        Sources = new List<Source>()
                                     };
+                                    if(DbUtils.IsNotDbNull(reader, "SourceId"))
+                                       {
+                                        ingredient.IngredientReview.Sources.Add(new Source()
+                                        {
+                                            Id = DbUtils.GetInt(reader, "SourceId"),
+                                            Link = DbUtils.GetString(reader, "Link"),
+                                            IngredientReviewId = DbUtils.GetInt(reader, "IrId")
+                                        });
+
+                                        }
+                                }
+                                if(DbUtils.IsNotDbNull(reader, "UseId"))
+                                {
+                                    ingredient.Uses.Add(new Use()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "UseId"),
+                                        Description = DbUtils.GetString(reader, "Description")
+                                    });
+                                }
+                                if(DbUtils.IsNotDbNull(reader, "IHId"))
+                                {
+                                    ingredient.Hazards.Add(new Models.IngredientHazard()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "IHId"),
+                                        HazardId = DbUtils.GetInt(reader, "HId"),
+                                        Case = DbUtils.GetString(reader, "Case"),
+                                        Hazard = new Hazard()
+                                        {
+                                            Id = DbUtils.GetInt(reader, "HId"),
+                                            Name = DbUtils.GetString(reader, "HName"),
+                                            Description = DbUtils.GetString(reader, "HDescription")
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -147,15 +188,13 @@ namespace Capstone.Repositories
                             UPDATE Ingredient
                             SET 
                                 [Name] = @name,
-                                [Function] = @function,
-                                SafetyInfo = @safetyInfo
+                                ImageUrl = @imageUrl
                             WHERE Id = @id";
 
 
                     DbUtils.AddParameter(cmd, "@name", ingredient.Name);
                     DbUtils.AddParameter(cmd, "@id", ingredient.Id);
-                    DbUtils.AddParameter(cmd, "@function", ingredient.Function);
-                    DbUtils.AddParameter(cmd, "@safetyInfo", ingredient.SafetyInfo);
+                    DbUtils.AddParameter(cmd, "@imageUrl", ingredient.ImageUrl);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -170,12 +209,11 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO Ingredient ([Name], [Function], SafetyInfo)
+                    INSERT INTO Ingredient ([Name], ImageUrl)
                     OUTPUT INSERTED.Id
-                    VALUES (@name, @function, @safetyInfo)";
+                    VALUES (@name, @imageUrl)";
                     DbUtils.AddParameter(cmd, "@name", ingredient.Name);
-                    DbUtils.AddParameter(cmd, "@function", ingredient.Function);
-                    DbUtils.AddParameter(cmd, "@safetyInfo", ingredient.SafetyInfo);
+                    DbUtils.AddParameter(cmd, "@imageUrl", ingredient.ImageUrl);
 
                     int newlyCreatedId = (int)cmd.ExecuteScalar();
                     ingredient.Id = newlyCreatedId;
@@ -206,7 +244,7 @@ namespace Capstone.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     var sql = @"
-                    SELECT i.Id, i.[Name], i.[Function], i.[SafetyInfo],
+                    SELECT i.Name, i.Id, i.ImageUrl,
                            ir.RateId, ir.Id AS IrId, r.Rating
                     FROM Ingredient i
                     LEFT JOIN IngredientReview ir ON ir.IngredientId = i.Id
@@ -224,8 +262,7 @@ namespace Capstone.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
-                                Function = DbUtils.GetString(reader, "Function"),
-                                SafetyInfo = DbUtils.GetString(reader, "SafetyInfo"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
 
                             };
                             if (DbUtils.IsNotDbNull(reader, "IrId"))
@@ -254,8 +291,7 @@ namespace Capstone.Repositories
             {
                 Id = DbUtils.GetInt(reader, "Id"),
                 Name = DbUtils.GetString(reader, "Name"),
-                Function = DbUtils.GetString(reader, "Function"),
-                SafetyInfo = DbUtils.GetString(reader, "SafetyInfo"),
+                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
             };
         }
     }

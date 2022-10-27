@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Capstone.Models
 {
@@ -7,9 +8,11 @@ namespace Capstone.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Function { get; set; }    
-        public string SafetyInfo { get; set; }  
+       
+        public string ImageUrl { get; set; }
         public IngredientReview IngredientReview { get; set; }  
+        public List<Use> Uses { get; set; }
+        public List<IngredientHazard> Hazards { get; set; }   
 
     }
 }

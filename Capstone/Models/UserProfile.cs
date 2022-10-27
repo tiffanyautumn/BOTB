@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System;
+using Microsoft.SqlServer.Server;
 
 namespace Capstone.Models
 {
@@ -26,9 +27,9 @@ namespace Capstone.Models
 
        
         [Required]
-        public int RoleId { get; set; }
+        public int UserTypeId { get; set; }
 
-        public Role Role { get; set; }
+        public UserType UserType { get; set; }
        
         public string FullName
         {

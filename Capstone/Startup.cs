@@ -35,7 +35,11 @@ namespace Capstone
             services.AddTransient<IIngredientRepository, IngredientRepository>();   
             services.AddTransient<IIngredientReviewRepository, IngredientReviewRepository>();
             services.AddTransient<IProductIngredientRepository, ProductIngredientRepository>();
+            services.AddTransient<IBrandRepository, BrandRepository>();
             services.AddTransient<IRateRepository, RateRepository>();
+            services.AddTransient<IUseRepository, UseRepository>();
+            services.AddTransient<IHazardRepository, HazardRepository>();
+            services.AddTransient<IIngredientHazardRepository, IngredientHazardRepository>();
 
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
             var googleTokenUrl = $"https://securetoken.google.com/{firebaseProjectId}";

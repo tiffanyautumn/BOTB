@@ -8,7 +8,8 @@ namespace Capstone.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }    
-        public string Brand { get; set; }
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; }
         [Required]
         public int TypeId { get; set; }
         public Type Type { get; set; }  

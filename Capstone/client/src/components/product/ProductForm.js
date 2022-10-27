@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, FormGroup, Input, Label, Form } from "reactstrap"
+import { getAllBrands } from "../../modules/brandManager"
 import { addProduct } from "../../modules/productManager"
 import { getAllTypes } from "../../modules/typeManager"
 
 export const ProductForm = () => {
     const navigate = useNavigate()
     const [types, setTypes] = useState([])
+    const [brands, setBrands] = useState([])
     const [product, updateProduct] = useState({
         name: "",
-        brand: "",
+        brandId: 0,
         typeId: 0,
         price: 0,
         imageUrl: ""
@@ -19,8 +21,12 @@ export const ProductForm = () => {
         getAllTypes().then(t => setTypes(t))
     }
 
+    const getBrands = () => {
+        getAllBrands().then(b => setBrands(b))
+    }
     useEffect(() => {
         getTypes();
+        getBrands();
     }, []);
 
     const handleSaveButtonClick = (event) => {
@@ -31,7 +37,7 @@ export const ProductForm = () => {
         }
         const productToSend = {
             name: product.name,
-            brand: product.brand,
+            brandId: parseInt(product.brandId),
             typeId: parseInt(product.typeId),
             price: parseFloat(product.price).toFixed(2),
             imageUrl: product.imageUrl
@@ -67,16 +73,21 @@ export const ProductForm = () => {
                         <Input
                             id="brand"
                             name="brand"
-                            type="text"
-                            value={product.brand}
+                            type="select"
                             onChange={
                                 (evt) => {
                                     const copy = { ...product }
-                                    copy.brand = evt.target.value
+                                    copy.brandId = evt.target.value
                                     updateProduct(copy)
                                 }
-                            } />
+                            } >
+                            <option>choose a brand</option>
+                            {brands.map((b) => (
+                                <option value={b.id} key={b.id}>{b.name}</option>
+                            ))}
+                        </Input>
                     </FormGroup>
+
                     <FormGroup>
                         <Label for="price">Price</Label>
                         <Input

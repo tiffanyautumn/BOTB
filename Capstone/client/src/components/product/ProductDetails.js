@@ -39,7 +39,7 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
                 </Card>
 
                 <CardText>
-                    <p>{product?.brand}</p>
+                    <p>{product?.brand?.name}</p>
                     <p>{product?.name}</p>
                     <p>{product?.type?.name}</p>
                     ${product?.price?.toFixed(2)}

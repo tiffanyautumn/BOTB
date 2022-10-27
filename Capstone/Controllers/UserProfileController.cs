@@ -44,7 +44,7 @@ namespace Capstone.Controllers
         [HttpPost]
         public IActionResult Post(UserProfile profile)
         {
-            profile.RoleId = 3;
+            profile.UserTypeId = 3;
             try
             {
                 _userProfileRepository.Add(profile);

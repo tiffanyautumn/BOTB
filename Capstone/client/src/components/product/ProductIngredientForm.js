@@ -9,8 +9,8 @@ export const ProductIngredientForm = ({ product, setFormActive, getProduct }) =>
     const [ingredients, setIngredients] = useState([])
     const [productIngredient, updateProductIngredient] = useState({
         ingredientId: 0,
-        active: false,
-        use: ""
+        activeIngredient: false,
+        order: 0
     })
 
     const getIngredients = () => {
@@ -34,8 +34,8 @@ export const ProductIngredientForm = ({ product, setFormActive, getProduct }) =>
         const productIngredientToSend = {
             ingredientId: parseInt(productIngredient.ingredientId),
             productId: product.id,
-            active: productIngredient.active,
-            use: productIngredient.use
+            activeIngredient: productIngredient.activeIngredient,
+            order: parseInt(productIngredient.order)
         }
 
         return addProductIngredient(productIngredientToSend)
@@ -68,31 +68,31 @@ export const ProductIngredientForm = ({ product, setFormActive, getProduct }) =>
                 </FormGroup>
                 <Form className="ingredientForm">
                     <FormGroup>
-                        <Label for="active">Active</Label>
+                        <Label for="activeIngredient">Active</Label>
                         <Input
-                            id="active"
-                            name="active"
+                            id="activeIngredient"
+                            name="activeIngredient"
                             type="checkbox"
-                            value={productIngredient.active}
+                            value={productIngredient.activeIngredient}
                             onChange={
                                 (evt) => {
                                     const copy = { ...productIngredient }
-                                    copy.active = evt.target.checked
+                                    copy.activeIngredient = evt.target.checked
                                     updateProductIngredient(copy)
                                 }
                             } />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="use">Use</Label>
+                        <Label for="order">Order</Label>
                         <Input
-                            id="use"
-                            name="use"
-                            type="text"
-                            value={productIngredient.use}
+                            id="order"
+                            name="order"
+                            type="number"
+                            value={productIngredient.order}
                             onChange={
                                 (evt) => {
                                     const copy = { ...productIngredient }
-                                    copy.use = evt.target.value
+                                    copy.order = evt.target.value
                                     updateProductIngredient(copy)
                                 }
                             } />

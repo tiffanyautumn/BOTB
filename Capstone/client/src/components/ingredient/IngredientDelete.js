@@ -27,6 +27,6 @@ export const IngredientDelete = () => {
     return <>
         <h2>Are you sure that you want to delete {ingredient.name}</h2>
         <Button onClick={() => { deleteButton() }}>Delete</Button>
-        <Button onClick={() => { navigate("/ingredient") }}>Cancel</Button>
+        <Button onClick={() => { navigate(`/ingredient/${ingredientId}`) }}>Cancel</Button>
     </>
 }

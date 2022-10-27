@@ -14,7 +14,8 @@ export const Product = ({ product }) => {
                 <CardBody>
                     <CardImg top width="100%" src={product?.imageUrl} alt="Card image cap" />
 
-                    <p>{product?.brand}</p>
+                    <p>{product?.brand?.name}</p>
+
                     <Button onClick={() => navigate(`/product/${product?.id}`)}>{product?.name}</Button>
 
                 </CardBody>

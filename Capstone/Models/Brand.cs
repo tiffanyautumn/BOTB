@@ -2,7 +2,7 @@
 
 namespace Capstone.Models
 {
-    public class Role
+    public class Brand
     {
         public int Id { get; set; }
         [Required]

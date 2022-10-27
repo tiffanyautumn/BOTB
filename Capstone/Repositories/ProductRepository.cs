@@ -19,12 +19,14 @@ namespace Capstone.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT p.Id, p.Name, p.Brand, p.TypeId, p.Price, p.ImageUrl, t.Type, 
-                              pi.Id as PIId, pi.IngredientId, pi.Active, pi.[Use],
-                              i.Name as IName, i.SafetyInfo
+                       SELECT p.Id, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl, t.Name AS TName, 
+                              pi.Id as PIId, pi.IngredientId, pi.ActiveIngredient, 
+                              b.Name AS BName,
+                              i.Name as IName
                        FROM Product p
-                       LEFT JOIN Type t ON p.TypeId = t.Id
+                       LEFT JOIN [Type] t ON p.TypeId = t.Id
                        LEFT JOIN ProductIngredient pi ON pi.ProductId = p.Id
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
                        LEFT JOIN Ingredient i ON i.Id = pi.IngredientId
                        ORDER BY p.Name";
 
@@ -53,11 +55,9 @@ namespace Capstone.Repositories
                                     {
                                         Id = DbUtils.GetInt(reader, "IngredientId"),
                                         Name = DbUtils.GetString(reader, "IName"),
-                                        SafetyInfo = DbUtils.GetString(reader, "SafetyInfo")
                                     },
                                     ProductId = productId,
-                                    Active = DbUtils.GetBoolean(reader, "Active"),
-                                    Use = DbUtils.GetString(reader, "Use")
+                                    ActiveIngredient = DbUtils.GetBoolean(reader, "ActiveIngredient"),
 
                                 });
                             }
@@ -80,13 +80,19 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT p.Id, p.Name, p.Brand, p.TypeId, p.Price, p.ImageUrl, t.Type, 
-                              pi.Id as PIId, pi.IngredientId, pi.Active, pi.[Use],
-                              i.Name as IName, i.SafetyInfo,
+                       SELECT p.Id, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl, t.Name AS TName, 
+                              pi.Id as PIId, pi.IngredientId, pi.ActiveIngredient, pi.[Order],
+                              i.Name as IName,
+                              b.Name AS BName,
+                              piu.Id AS PIUId,
+                              u.Description, u.Id AS UseId,
                               ir.Id AS ReviewId, ir.RateId, r.Rating
                        FROM Product p
                        LEFT JOIN Type t ON p.TypeId = t.Id
                        LEFT JOIN ProductIngredient pi ON pi.ProductId = p.Id
+                       LEFT JOIN ProductIngredientUse piu ON pi.Id = piu.ProductIngredientId
+                       LEFT JOIN [Use] u ON piu.UseId = u.Id
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
                        LEFT JOIN Ingredient i ON i.Id = pi.IngredientId
                        LEFT JOIN IngredientReview ir ON ir.IngredientId = i.Id
                        LEFT JOIN Rate r ON r.Id = ir.RateId
@@ -106,7 +112,7 @@ namespace Capstone.Repositories
                             if (DbUtils.IsNotDbNull(reader, "PIId"))
                             {
                                 ProductIngredient productIngredient = null;
-                                product.ProductIngredients.Add( productIngredient = new ProductIngredient()
+                                product.ProductIngredients.Add(productIngredient = new ProductIngredient()
                                 {
                                     Id = DbUtils.GetInt(reader, "PIId"),
                                     IngredientId = DbUtils.GetInt(reader, "IngredientId"),
@@ -114,14 +120,21 @@ namespace Capstone.Repositories
                                     {
                                         Id = DbUtils.GetInt(reader, "IngredientId"),
                                         Name = DbUtils.GetString(reader, "IName"),
-                                        SafetyInfo = DbUtils.GetString(reader, "SafetyInfo")
                                     },
                                     ProductId = id,
-                                    Active = DbUtils.GetBoolean(reader, "Active"),
-                                    Use = DbUtils.GetString(reader, "Use"),
-                                    
+                                    ActiveIngredient = DbUtils.GetBoolean(reader, "ActiveIngredient"),
+                                    Uses = new List<Use>()
 
-                                });
+                                }) ;
+                            if(DbUtils.IsNotDbNull(reader, "PIUId"))
+                                {
+                                    productIngredient.Uses.Add(new Use()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "UseId"),
+                                        Description = DbUtils.GetString(reader, "Description"),
+                                        IngredientId = DbUtils.GetInt(reader, "IngredientId")
+                                    });
+                                }
                             if(DbUtils.IsNotDbNull(reader, "ReviewId"))
                             {
                                     productIngredient.Ingredient.IngredientReview = new IngredientReview()
@@ -159,7 +172,7 @@ namespace Capstone.Repositories
                             UPDATE Product
                             SET 
                                 [Name] = @name,
-                                Brand = @brand,
+                                BrandId = @brandId,
                                 TypeId = @typeId,
                                 Price = @price,
                                 ImageUrl = @imageUrl
@@ -168,7 +181,7 @@ namespace Capstone.Repositories
 
                     DbUtils.AddParameter(cmd, "@name", product.Name);
                     DbUtils.AddParameter(cmd, "@id", product.Id);
-                    DbUtils.AddParameter(cmd, "@brand", product.Brand);
+                    DbUtils.AddParameter(cmd, "@brandId", product.BrandId);
                     DbUtils.AddParameter(cmd, "@typeId", product.TypeId);
                     DbUtils.AddParameter(cmd, "@price", product.Price);
                     DbUtils.AddParameter(cmd, "@imageUrl", product.ImageUrl);
@@ -186,11 +199,11 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO Product (Name, Brand, TypeId, Price, ImageUrl)
+                    INSERT INTO Product (Name, BrandId, TypeId, Price, ImageUrl)
                     OUTPUT INSERTED.Id
-                    VALUES (@name, @brand, @typeId, @price, @imageUrl)";
+                    VALUES (@name, @brandId, @typeId, @price, @imageUrl)";
                     DbUtils.AddParameter(cmd, "@name", product.Name);
-                    DbUtils.AddParameter(cmd, "@brand", product.Brand);
+                    DbUtils.AddParameter(cmd, "@brandId", product.BrandId);
                     DbUtils.AddParameter(cmd, "@typeId", product.TypeId);
                     DbUtils.AddParameter(cmd, "@price", product.Price);
                     DbUtils.AddParameter(cmd, "@imageUrl", product.ImageUrl);
@@ -225,9 +238,10 @@ namespace Capstone.Repositories
                 using(var cmd = conn.CreateCommand())
                 {
                     var sql = @"
-                    SELECT p.Id, p.[Name], p.Brand, p.TypeId, p.Price, p.ImageUrl
+                    SELECT p.Id, p.[Name], p.BrandId, p.TypeId, p.Price, p.ImageUrl, b.[Name] AS BName
                     FROM Product p
-                    WHERE p.[Name] LIKE @Criterion OR p.Brand LIKE @Criterion";
+                    LEFT JOIN Brand b ON p.BrandId = b.Id
+                    WHERE p.[Name] LIKE @Criterion OR b.Name LIKE @Criterion";
                     cmd.CommandText = sql;
                     DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -239,7 +253,12 @@ namespace Capstone.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
-                                Brand = DbUtils.GetString(reader, "Brand"),
+                                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                Brand = new Brand()
+                                {
+                                    Id = DbUtils.GetInt(reader, "BrandId"),
+                                    Name = DbUtils.GetString(reader, "BName"),
+                                },
                                 Price = DbUtils.GetDecimal(reader, "Price"),
                                 ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                                 TypeId = DbUtils.GetInt(reader, "TypeId"),
@@ -258,14 +277,19 @@ namespace Capstone.Repositories
             {
                 Id = DbUtils.GetInt(reader, "Id"),
                 Name = DbUtils.GetString(reader, "Name"),
-                Brand = DbUtils.GetString(reader, "Brand"),
+                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                Brand = new Brand()
+                {
+                    Id = DbUtils.GetInt(reader, "BrandId"),
+                    Name = DbUtils.GetString(reader, "BName")
+                },
                 Price = DbUtils.GetDecimal(reader, "Price"),
                 ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                 TypeId = DbUtils.GetInt(reader, "TypeId"),
                 Type = new Type()
                 {
                     Id = DbUtils.GetInt(reader, "TypeId"),
-                    Name = DbUtils.GetString(reader, "Type"),
+                    Name = DbUtils.GetString(reader, "TName"),
                 },
                 ProductIngredients = new List<ProductIngredient>()
             };
