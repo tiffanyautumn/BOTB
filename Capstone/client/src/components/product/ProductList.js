@@ -30,13 +30,14 @@ export const ProductList = ({ isAdmin, isApproved, searchTermState }) => {
                 setFiltered(p)
             })
     }
+    const userProduct = false
     return (
         <div className="container">
 
 
             <div className="row ">
                 {filteredProducts.map((product) => (
-                    <Product product={product} key={product.id} isAdmin={isAdmin} />
+                    <Product product={product} key={product.id} isAdmin={isAdmin} userProduct={userProduct} />
                 ))}
             </div>
             {

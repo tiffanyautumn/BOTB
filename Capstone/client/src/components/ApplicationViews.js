@@ -1,5 +1,9 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom"
+import { BrandForm } from "./brand/BrandForm";
+import { BrandList } from "./brand/BrandList";
+import { HazardForm } from "./hazards/HazardForm";
+import { HazardList } from "./hazards/HazardList";
 import Hello from "./Hello";
 import { IngredientContainer } from "./ingredient/IngredientContainer";
 import { IngredientDelete } from "./ingredient/IngredientDelete";
@@ -20,6 +24,7 @@ import { ProductList } from "./product/ProductList";
 import Register from "./Register";
 import { TypeForm } from "./type/TypeForm";
 import { TypeList } from "./type/TypeList";
+import { UserProductList } from "./userProduct/UserProductList";
 
 
 export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
@@ -52,6 +57,19 @@ export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
                 <Route path="type/">
                     <Route index element={isLoggedIn && isAdmin ? <TypeList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
                     <Route path="create" element={isLoggedIn && isAdmin ? <TypeForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+                <Route path="brand/">
+                    <Route index element={isLoggedIn && isAdmin ? <BrandList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="create" element={isLoggedIn && isAdmin ? <BrandForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+                <Route path="hazard/">
+                    <Route index element={isLoggedIn ? <HazardList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="create" element={isLoggedIn && isAdmin ? <HazardForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+
+                <Route path="myProducts/">
+                    <Route index element={isLoggedIn ? <UserProductList isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
+
                 </Route>
 
 

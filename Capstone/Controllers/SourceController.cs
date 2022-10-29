@@ -9,34 +9,33 @@ namespace Capstone.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BrandController : ControllerBase
+    public class SourceController : ControllerBase
     {
-        private readonly IBrandRepository _brandRepository;
+        private readonly ISourceRepository _sourceRepository;
 
-        public BrandController(IBrandRepository brandRepository)
+        public SourceController(ISourceRepository sourceRepository)
         {
-            _brandRepository = brandRepository;
+            _sourceRepository = sourceRepository;
         }
-
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_brandRepository.GetAll());
+            return Ok(_sourceRepository.GetAll());
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        [HttpGet("review/{id}")]
+        public IActionResult GetSourcesByReviewId(int id)
         {
-            return Ok(_brandRepository.GetBrandById(id));
+            return Ok(_sourceRepository.GetAllByReviewId(id));
         }
 
         [HttpPost]
-        public IActionResult Post(Brand brand)
+        public IActionResult Post(Source source)
         {
             try
             {
-                _brandRepository.AddBrand(brand);
-                return CreatedAtAction("Get", new { id = brand.Id }, brand);
+                _sourceRepository.AddSource(source);
+                return CreatedAtAction("Get", new { id = source.Id }, source);
             }
             catch (Exception)
             {
@@ -46,13 +45,13 @@ namespace Capstone.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Brand brand)
+        public IActionResult Put(int id, Source source)
         {
-            if (id != brand.Id)
+            if (id != source.Id)
             {
                 return BadRequest();
             }
-            _brandRepository.UpdateBrand(brand);
+            _sourceRepository.UpdateSource(source);
             return NoContent();
         }
 
@@ -60,7 +59,7 @@ namespace Capstone.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
-            _brandRepository.DeleteBrand(id);
+            _sourceRepository.DeleteSource(id);
             return NoContent();
         }
     }

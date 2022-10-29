@@ -4,6 +4,7 @@
     {
         public int Id { get; set; } 
         public int UserProfileId { get; set; }  
+        public UserProfile UserProfile { get; set; }    
         public int ProductId { get; set; }
         public string Comment { get; set; } 
         public int AffordabilityRate { get; set; }  

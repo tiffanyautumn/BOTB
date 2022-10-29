@@ -8,8 +8,6 @@ export const Ingredient = ({ ingredient }) => {
     return (
         <tr>
             <td><Button onClick={() => { navigate(`/ingredient/${ingredient.id}`) }}>{ingredient.name}</Button></td>
-            <td>{ingredient.function}</td>
-            <td>{ingredient.safetyInfo}</td>
             <td>{ingredient?.ingredientReview?.rate?.rating}</td>
         </tr>
     )

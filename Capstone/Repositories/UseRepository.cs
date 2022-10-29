@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using Capstone.Repositories.Interfaces;
 using Capstone.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -74,9 +75,9 @@ namespace Capstone.Repositories
                         {
                             uses.Add(new Use()
                                 {
-                                    Id = id,
+                                    Id = DbUtils.GetInt(reader, "Id"),
                                     Description = DbUtils.GetString(reader, "Description"),
-                                    IngredientId = DbUtils.GetInt(reader, "IngredientId")
+                                    IngredientId = id
                                 });
                         }
 
@@ -86,6 +87,7 @@ namespace Capstone.Repositories
                 }
             }
         }
+
 
         public void AddUse(Use use)
         {
@@ -100,6 +102,26 @@ namespace Capstone.Repositories
                     VALUES (@description, @ingredientId)";
                     DbUtils.AddParameter(cmd, "@description", use.Description);
                     DbUtils.AddParameter(cmd, "@ingredientId", use.IngredientId);
+
+                    int newlyCreatedId = (int)cmd.ExecuteScalar();
+                    use.Id = newlyCreatedId;
+                }
+            }
+        }
+
+        public void AddProductIngredientUse(ProductIngredientUse use)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO ProductIngredientUse (UseId, ProductIngredientId)
+                    OUTPUT INSERTED.Id
+                    VALUES (@useId, @productIngredientId)";
+                    DbUtils.AddParameter(cmd, "@useId", use.UseId);
+                    DbUtils.AddParameter(cmd, "@productIngredientId", use.ProductIngredientId);
 
                     int newlyCreatedId = (int)cmd.ExecuteScalar();
                     use.Id = newlyCreatedId;

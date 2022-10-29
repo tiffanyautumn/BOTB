@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Capstone.Models;
 using static Capstone.Repositories.UserProfileRepository;
 using System.Collections.Generic;
+using Capstone.Repositories.Interfaces;
 
 namespace Capstone.Repositories
 {

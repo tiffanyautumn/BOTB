@@ -4,7 +4,7 @@ import { Button, Card, CardBody, FormGroup, Input, Label, Form } from "reactstra
 import { getAllIngredients } from "../../modules/ingredientManager"
 import { addProductIngredient } from "../../modules/productIngredientManager"
 
-export const ProductIngredientForm = ({ product, setFormActive, getProduct }) => {
+export const ProductIngredientForm = ({ product, setFormActive, getProduct, getPIs }) => {
     const navigate = useNavigate()
     const [ingredients, setIngredients] = useState([])
     const [productIngredient, updateProductIngredient] = useState({
@@ -42,6 +42,7 @@ export const ProductIngredientForm = ({ product, setFormActive, getProduct }) =>
             .then(() => {
                 setFormActive(false)
                 getProduct()
+                getPIs()
             })
     }
     return (<>

@@ -5,6 +5,11 @@ export const getAllBrands = () => {
         .then((res) => res.json())
 }
 
+export const getBrandById = (id) => {
+    return fetch(baseUrl + `/${id}`)
+        .then((res) => res.json())
+}
+
 export const addBrand = (brand) => {
     return fetch(baseUrl, {
         method: "POST",
@@ -13,4 +18,22 @@ export const addBrand = (brand) => {
         },
         body: JSON.stringify(brand)
     })
+}
+
+
+export const deleteBrand = (id) => {
+    return fetch(baseUrl + `/delete/${id}`, {
+        method: "DELETE",
+    })
+}
+
+export const editBrand = (id, brand) => {
+    return fetch(baseUrl + `/${id}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(brand)
+    })
+
 }

@@ -4,7 +4,7 @@ import { Button, Card, CardBody, CardImg, CardText, Col } from "reactstrap";
 import { NavLink as RRNavLink } from "react-router-dom";
 import { addUserProduct, deleteUserProduct } from "../../modules/productManager";
 
-export const Product = ({ product, userProduct, userProductId, getAllUserProducts }) => {
+export const UserProduct = ({ product, userProduct, userProductId, getAllUserProducts }) => {
     const navigate = useNavigate()
 
     const deleteButton = () => {
@@ -27,7 +27,7 @@ export const Product = ({ product, userProduct, userProductId, getAllUserProduct
 
                     <Button onClick={() => navigate(`/product/${product?.id}`)}>{product?.name}</Button>
                     {
-                        userProduct ? <button className="btn" onClick={(() => deleteButton())} ><i className="fa-solid fa-xmark"></i></button> : <button onClick={(() => addUserProduct(product))} className="btn"><i className="fa-solid fa-person-circle-plus"></i></button>
+                        userProduct ? <button className="btn" onClick={(() => deleteButton())} ><i className="fa-solid fa-xmark"></i></button> : <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button>
                     }
 
                 </CardBody>

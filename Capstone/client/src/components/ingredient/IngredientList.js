@@ -42,8 +42,6 @@ export const IngredientList = ({ isAdmin, isApproved, searchTermState }) => {
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Use</th>
-                        <th>Safety</th>
                         <th>Rating</th>
                     </tr>
                 </thead>

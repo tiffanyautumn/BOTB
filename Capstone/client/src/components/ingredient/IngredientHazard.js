@@ -1,6 +1,6 @@
 import { deleteIngredientHazard } from "../../modules/ingredientHazardManager"
 
-export const Hazard = ({ hazard, hazardDelete, getIngredientHazards }) => {
+export const IngredientHazard = ({ hazard, hazardDelete, getIngredientHazards }) => {
 
     const deleteButton = () => {
         return deleteIngredientHazard(hazard.id)

@@ -1,24 +1,38 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardBody, CardImg, CardText, Col, Row, Table } from "reactstrap"
-import { getProductById } from "../../modules/productManager"
+import { Accordion, Button, Card, CardBody, CardImg, CardText, Col, Row, Table } from "reactstrap"
+import { addUserProduct, getProductById } from "../../modules/productManager"
 import { ProductIngredient } from "./ProductIngredient"
 import { ProductIngredientForm } from "./ProductIngredientForm"
 import './Product.css';
+import { getPIByProductId } from "../../modules/productIngredientManager"
 
 export const ProductDetails = ({ isAdmin, isApproved }) => {
+    const [open, setOpen] = useState('1');
     const { productId } = useParams()
     const navigate = useNavigate()
     const [product, setProduct] = useState([])
+    const [productIngredients, setProductIngredients] = useState([])
     const [formActive, setFormActive] = useState(false)
+    const toggle = (id) => {
+        if (open === id) {
+            setOpen();
+        } else {
+            setOpen(id);
+        }
+    };
 
     const getProduct = () => {
         getProductById(productId).then(p => setProduct(p))
     }
 
+    const getPIs = () => {
+        getPIByProductId(productId).then(pi => setProductIngredients(pi))
+    }
     useEffect(
         () => {
             getProduct()
+            getPIs()
         }, []
     )
 
@@ -37,39 +51,29 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
                 }}>
                     <CardImg className="productDetailImage" height="15%" width="25%" src={product?.imageUrl} alt="Card image cap" />
                 </Card>
-
+                <button className="btn"><i class="fa-solid fa-comment-dollar"></i></button>
                 <CardText>
                     <p>{product?.brand?.name}</p>
-                    <p>{product?.name}</p>
+                    <p>{product?.name} <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button></p>
                     <p>{product?.type?.name}</p>
                     ${product?.price?.toFixed(2)}
                 </CardText>
 
 
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Use</th>
-                            <th>Safety</th>
-                            <th>Rating</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+
+                <div>
+                    <Accordion open={open} toggle={toggle}>
                         {
-                            product?.productIngredients?.map((pi) => (
-                                <ProductIngredient productIngredient={pi} getProduct={getProduct} key={pi.id} isAdmin={isAdmin} isApproved={isApproved} />
+                            productIngredients.map((pi) => (
+                                <ProductIngredient getPIs={getPIs} productIngredient={pi} getProduct={getProduct} key={pi.id} isAdmin={isAdmin} isApproved={isApproved} />
                             ))
                         }
-                    </tbody>
+                    </Accordion>
+                </div>
 
-                </Table>
                 {
                     formActive
-                        ? <ProductIngredientForm product={product} setFormActive={setFormActive} getProduct={getProduct} />
+                        ? <ProductIngredientForm getPIs={getPIs} product={product} setFormActive={setFormActive} getProduct={getProduct} />
                         : ""
 
                 }

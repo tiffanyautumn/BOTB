@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using Capstone.Repositories.Interfaces;
 using Capstone.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,44 @@ namespace Capstone.Repositories
             }
         }
 
+        public Type GetTypeById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT t.Name, t.Id
+                       FROM Type t
+                       WHERE t.Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Type type = null;
+                        while (reader.Read())
+                        {
+                            if (type == null)
+                            {
+                                type = new Type()
+                                {
+                                    Id = DbUtils.GetInt(reader, "Id"),
+                                    Name = DbUtils.GetString(reader, "Name")
+                                };
+                                
+                            }
+                        }
+                        return type;
+
+                    }
+                }
+            }
+        }
+
+
         public void AddType(Type type)
         {
             using (SqlConnection conn = Connection)
@@ -57,6 +96,48 @@ namespace Capstone.Repositories
                 }
             }
         }
+
+        public void DeleteType(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Type
+                                       WHERE Id = @id";
+
+                    DbUtils.AddParameter(cmd, "@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateType(Type type)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Type
+                            SET 
+                                [Name] = @name
+                            WHERE Id = @id";
+
+
+                    DbUtils.AddParameter(cmd, "@name", type.Name);
+                    DbUtils.AddParameter(cmd, "@id", type.Id);
+                    
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+       
 
     }
 }

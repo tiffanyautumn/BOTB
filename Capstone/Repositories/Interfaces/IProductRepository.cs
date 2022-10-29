@@ -1,7 +1,7 @@
 ﻿using Capstone.Models;
 using System.Collections.Generic;
 
-namespace Capstone.Repositories
+namespace Capstone.Repositories.Interfaces
 {
     public interface IProductRepository
     {
@@ -12,6 +12,10 @@ namespace Capstone.Repositories
         void DeleteProduct(int id);
         List<Product> Search(string criterion);
 
+        void AddUserProduct(Product product, int id);
 
+        Product GetUserProductById(int id);
+        List<UserProduct> GetUserProductsByUserId(int id);
+        void DeleteUserProduct(int id);
     }
 }

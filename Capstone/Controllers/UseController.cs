@@ -1,5 +1,5 @@
 ﻿using Capstone.Models;
-using Capstone.Repositories;
+using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -34,7 +34,22 @@ namespace Capstone.Controllers
             try
             {
                 _useRepository.AddUse(use);
-                return Ok(_useRepository.GetUseById(use.IngredientId));
+                return Ok(_useRepository.GetUseById(use.Id));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPost("productIngredient")]
+        public IActionResult PIPost(ProductIngredientUse use)
+        {
+            try
+            {
+                _useRepository.AddProductIngredientUse(use);
+                return NoContent();
             }
             catch (Exception)
             {

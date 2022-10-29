@@ -7,7 +7,7 @@ import './ingredient.css'
 import { UseForm } from "./UseForm"
 import { getUsesByIngredientId } from "../../modules/useManager"
 import { getIngredientHazardByIngredientId } from "../../modules/ingredientHazardManager"
-import { Hazard } from "./Hazard"
+import { IngredientHazard } from "./IngredientHazard"
 import { IngredientHazardForm } from "./IngredientHazardForm"
 import { getAllHazards } from "../../modules/hazardManager"
 
@@ -110,7 +110,7 @@ export const IngredientDetails = ({ isAdmin, isApproved }) => {
 
                                 </span>
                                 {hazardForm ? <IngredientHazardForm hazards={hazards} getIngredientHazards={getIngredientHazards} setHazardForm={setHazardForm} ingredient={ingredient} getIngredient={getIngredient} /> : ""}
-                                {ingredientHazards.map((h) => (<Hazard hazard={h} hazardDelete={hazardDelete} getIngredientHazards={getIngredientHazards} />))}
+                                {ingredientHazards.map((h) => (<IngredientHazard hazard={h} hazardDelete={hazardDelete} getIngredientHazards={getIngredientHazards} />))}
                             </p>
                             <p className="Review panel-item">
                                 <span className="title">Our Review {

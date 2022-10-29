@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using Capstone.Repositories.Interfaces;
 using Capstone.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;

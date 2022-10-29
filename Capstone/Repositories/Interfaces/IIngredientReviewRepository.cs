@@ -1,6 +1,6 @@
 ﻿using Capstone.Models;
 
-namespace Capstone.Repositories
+namespace Capstone.Repositories.Interfaces
 {
     public interface IIngredientReviewRepository
     {

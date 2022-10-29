@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace Capstone.Repositories
 {
-    public class RateRepository : BaseRepository, IRateRepository
+    public class SourceRepository : BaseRepository, ISourceRepository
     {
-        public RateRepository(IConfiguration configuration) : base(configuration) { }
+        public SourceRepository(IConfiguration configuration) : base(configuration){ }
 
-        public List<Rate> GetAll()
+        public List<Source> GetAll()
         {
             using (var conn = Connection)
             {
@@ -19,25 +19,26 @@ namespace Capstone.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT Rating, Id
-                       FROM Rate";
+                       SELECT Link, IngredientReviewId, Id
+                       FROM Source";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        var rates = new List<Rate>();
+                        var sources = new List<Source>();
 
                         while (reader.Read())
                         {
-                            rates.Add(new Rate()
+                            sources.Add(new Source()
                             {
                                 Id = DbUtils.GetInt(reader, "Id"),
-                                Rating = DbUtils.GetString(reader, "Rating"),
+                                Link = DbUtils.GetString(reader, "Link"),
+                                IngredientReviewId = DbUtils.GetInt(reader, "IngredientReviewId")
                             });
 
 
                         };
                         reader.Close();
-                        return rates;
+                        return sources;
 
                     }
 
@@ -45,43 +46,47 @@ namespace Capstone.Repositories
                 }
             }
         }
-        public Rate GetRateById(int id)
+        public List<Source> GetAllByReviewId(int id)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
-
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT r.Rating, r.Id
-                       FROM [Rate] r
-                       WHERE r.Id = @id";
+                       SELECT s.Id, s.Link, s.IngredientReviewId, ir.Id
+                       FROM Source s
+                       LEFT JOIN IngredientReview ir ON ir.Id = s.IngredientReviewId
+                       WHERE ir.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        Rate rate = null;
+                        var sources = new List<Source>();
+
                         while (reader.Read())
                         {
-                            if (rate == null)
+                            sources.Add(new Source()
                             {
-                                rate = new Rate()
-                                {
-                                    Id = DbUtils.GetInt(reader, "Id"),
-                                    Rating = DbUtils.GetString(reader, "Rating")
-                                };
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Link = DbUtils.GetString(reader, "Link"),
+                                IngredientReviewId = DbUtils.GetInt(reader, "IngredientReviewId")
+                            });
 
-                            }
-                        }
-                        return rate;
+
+                        };
+                        reader.Close();
+                        return sources;
 
                     }
+
+
                 }
             }
         }
-        public void AddRate(Rate rate)
+
+        public void AddSource(Source source)
         {
             using (SqlConnection conn = Connection)
             {
@@ -89,25 +94,26 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO [Rate] ([Rating])
+                    INSERT INTO [Source] ([Link], IngredientReviewId)
                     OUTPUT INSERTED.Id
-                    VALUES (@rating)";
-                    DbUtils.AddParameter(cmd, "@rating", rate.Rating);
+                    VALUES (@link, @ingredientReviewId)";
+                    DbUtils.AddParameter(cmd, "@link", source.Link);
+                    DbUtils.AddParameter(cmd, "@ingredientReviewId", source.IngredientReviewId);
 
                     int newlyCreatedId = (int)cmd.ExecuteScalar();
-                    rate.Id = newlyCreatedId;
+                    source.Id = newlyCreatedId;
                 }
             }
         }
 
-        public void DeleteRate(int id)
+        public void DeleteSource(int id)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM [Rate]
+                    cmd.CommandText = @"DELETE FROM [Source]
                                        WHERE Id = @id";
 
                     DbUtils.AddParameter(cmd, "@id", id);
@@ -116,7 +122,7 @@ namespace Capstone.Repositories
             }
         }
 
-        public void UpdateRate(Rate rate)
+        public void UpdateSource(Source source)
         {
             using (SqlConnection conn = Connection)
             {
@@ -125,20 +131,21 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE [Rate]
+                            UPDATE [Source]
                             SET 
-                                [Rating] = @rating
+                                [Link] = @link,
+                                IngredientReviewId = @ingredientReviewId
                             WHERE Id = @id";
 
 
-                    DbUtils.AddParameter(cmd, "@rating", rate.Rating);
-                    DbUtils.AddParameter(cmd, "@id", rate.Id);
+                    DbUtils.AddParameter(cmd, "@link", source.Link);
+                    DbUtils.AddParameter(cmd, "@ingredientReviewId", source.IngredientReviewId);
+
 
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
-
     }
 }

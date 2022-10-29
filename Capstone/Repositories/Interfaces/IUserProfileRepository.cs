@@ -1,7 +1,7 @@
 ﻿using Capstone.Models;
 using System.Collections.Generic;
 
-namespace Capstone.Repositories
+namespace Capstone.Repositories.Interfaces
 {
     public interface IUserProfileRepository
     {

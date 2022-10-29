@@ -1,5 +1,5 @@
 ﻿using Capstone.Models;
-using Capstone.Repositories;
+using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

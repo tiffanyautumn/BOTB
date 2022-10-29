@@ -7,7 +7,11 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink
+    NavLink,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
 } from 'reactstrap';
 import { logout } from '../modules/authManager';
 
@@ -35,12 +39,26 @@ export default function Header({ isLoggedIn, isAdmin, isApproved }) {
                                     <NavLink tag={RRNavLink} to="/ingredient">Ingredients</NavLink>
                                 </NavItem>
 
+                                <UncontrolledDropdown nav inNavbar>
+                                    <DropdownToggle nav caret>
+                                        Options
+                                    </DropdownToggle>
+                                    <DropdownMenu end>
+                                        <DropdownItem><NavLink tag={RRNavLink} to="/myProducts">My Products</NavLink></DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem><NavLink tag={RRNavLink} to="/hazard">Hazards</NavLink></DropdownItem>
+                                        <DropdownItem><NavLink tag={RRNavLink} to="/type">Types</NavLink></DropdownItem>
+                                        <DropdownItem><NavLink tag={RRNavLink} to="/brand">Brands</NavLink></DropdownItem>
+
+
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>
                             </>
                         }
                         {isAdmin &&
                             <>
                                 <NavItem>
-                                    <NavLink tag={RRNavLink} to="/type">Types</NavLink>
+
                                 </NavItem>
                             </>
 
