@@ -98,7 +98,7 @@ namespace Capstone.Repositories
                             UPDATE Hazard
                             SET 
                                 [Name] = @name,
-                                Description = @description,
+                                Description = @description
                             WHERE Id = @id";
 
 

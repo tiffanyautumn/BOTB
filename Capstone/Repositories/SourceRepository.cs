@@ -46,6 +46,45 @@ namespace Capstone.Repositories
                 }
             }
         }
+
+        public Source GetSourceById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT s.[Link], s.Id, s.IngredientReviewId
+                       FROM Source s
+                       WHERE s.Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Source source = null;
+                        while (reader.Read())
+                        {
+                            if (source == null)
+                            {
+                                source = new Source()
+                                {
+                                    Id = DbUtils.GetInt(reader, "Id"),
+                                    Link = DbUtils.GetString(reader, "Link"),
+                                    IngredientReviewId = DbUtils.GetInt(reader, "IngredientReviewId")
+
+                                };
+
+                            }
+                        }
+                        return source;
+
+                    }
+                }
+            }
+        }
         public List<Source> GetAllByReviewId(int id)
         {
             using (SqlConnection conn = Connection)
@@ -54,7 +93,7 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT s.Id, s.Link, s.IngredientReviewId, ir.Id
+                       SELECT s.Id AS SourceId, s.Link, s.IngredientReviewId, ir.Id
                        FROM Source s
                        LEFT JOIN IngredientReview ir ON ir.Id = s.IngredientReviewId
                        WHERE ir.Id = @id";
@@ -69,7 +108,7 @@ namespace Capstone.Repositories
                         {
                             sources.Add(new Source()
                             {
-                                Id = DbUtils.GetInt(reader, "Id"),
+                                Id = DbUtils.GetInt(reader, "SourceId"),
                                 Link = DbUtils.GetString(reader, "Link"),
                                 IngredientReviewId = DbUtils.GetInt(reader, "IngredientReviewId")
                             });

@@ -136,7 +136,7 @@ namespace Capstone.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM Use
+                    cmd.CommandText = @"DELETE FROM [Use]
                                        WHERE Id = @id";
 
                     DbUtils.AddParameter(cmd, "@id", id);

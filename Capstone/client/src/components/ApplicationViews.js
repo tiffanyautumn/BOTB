@@ -21,6 +21,8 @@ import { ProductDetails } from "./product/ProductDetails";
 import { ProductEdit } from "./product/ProductEdit";
 import { ProductForm } from "./product/ProductForm";
 import { ProductList } from "./product/ProductList";
+import { RateForm } from "./rate/RateForm";
+import { RateList } from "./rate/RateList";
 import Register from "./Register";
 import { TypeForm } from "./type/TypeForm";
 import { TypeList } from "./type/TypeList";
@@ -65,6 +67,10 @@ export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
                 <Route path="hazard/">
                     <Route index element={isLoggedIn ? <HazardList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
                     <Route path="create" element={isLoggedIn && isAdmin ? <HazardForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+                <Route path="rate/">
+                    <Route index element={isLoggedIn ? <RateList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="create" element={isLoggedIn && isAdmin ? <RateForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
                 </Route>
 
                 <Route path="myProducts/">

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, FormGroup, Input, Label, Form } from "reactstrap"
 import { addIngredientReview } from "../../modules/ingredientReviewManager"
 import { getAllRates } from "../../modules/roleManager"
+import { addSource } from "../../modules/sourceManager"
 import { getUserProfiles } from "../../modules/userProfileManager"
 
 export const IngredientReviewForm = () => {
@@ -13,9 +14,9 @@ export const IngredientReviewForm = () => {
     const [ingredientReview, updateIngredientReview] = useState({
         rateId: 0,
         review: "",
-        source: "",
-        userId: 0
+        link: ""
     })
+
 
     const getRates = () => {
         getAllRates().then(r => setRates(r))
@@ -39,11 +40,17 @@ export const IngredientReviewForm = () => {
             rateId: parseInt(ingredientReview.rateId),
             ingredientId: parseInt(ingredientId),
             review: ingredientReview.review,
-            source: ingredientReview.source,
-            userId: parseInt(ingredientReview.userId)
+        }
+        const sourceToSend = {
+            link: ingredientReview.link
         }
 
         return addIngredientReview(ingredientReviewToSend)
+            .then(res => res.json())
+            .then((createdReview) => {
+                sourceToSend.ingredientReviewId = createdReview.id;
+                addSource(sourceToSend);
+            })
             .then(() => {
                 navigate(`/ingredient/${ingredientId}`)
             })
@@ -58,7 +65,7 @@ export const IngredientReviewForm = () => {
                         <Input
                             id="review"
                             name="review"
-                            type="text"
+                            type="textarea"
                             value={ingredientReview.review}
                             onChange={
                                 (evt) => {
@@ -68,36 +75,7 @@ export const IngredientReviewForm = () => {
                                 }
                             } />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="source">Source</Label>
-                        <Input
-                            id="source"
-                            name="source"
-                            type="text"
-                            value={ingredientReview.source}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredientReview }
-                                    copy.source = evt.target.value
-                                    updateIngredientReview(copy)
-                                }
-                            } />
-                    </FormGroup>
-                    {/* <FormGroup>
-                        <Label for="dateReviewed">Date Reviewed</Label>
-                        <Input
-                            id="dateReviewed"
-                            name="dateReviewed"
-                            type="date"
-                            value={ingredientReview.dateReviewed}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredientReview }
-                                    copy.dateReviewed = evt.target.value
-                                    updateIngredientReview(copy)
-                                }
-                            } />
-                    </FormGroup> */}
+
                     <FormGroup>
                         <Label for="rateSelect">Rating</Label>
                         <Input
@@ -117,26 +95,22 @@ export const IngredientReviewForm = () => {
                             ))}
                         </Input>
                     </FormGroup>
+
                     <FormGroup>
-                        <Label for="userSelect">Reviewer</Label>
+                        <Label for="link">Source</Label>
                         <Input
-                            id="userSelect"
-                            name="userId"
-                            type="select"
+                            id="link"
+                            name="link"
+                            type="text"
+                            value={ingredientReview.link}
                             onChange={
                                 (evt) => {
                                     const copy = { ...ingredientReview }
-                                    copy.userId = evt.target.value
+                                    copy.link = evt.target.value
                                     updateIngredientReview(copy)
                                 }
-                            }>
-                            <option>Choose a reviewer</option>
-                            {users.map((u) => (
-                                <option value={u.id} key={u.id}>{u.firstName} {u.lastName}</option>
-                            ))}
-                        </Input>
+                            } />
                     </FormGroup>
-
 
                     <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
                         className="btn btn-primary">

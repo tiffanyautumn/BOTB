@@ -46,7 +46,7 @@ namespace Capstone.Repositories
                                     Id = DbUtils.GetInt(reader, "Id"),
                                     Review = DbUtils.GetString(reader, "Review"),
                                     DateReviewed = DbUtils.GetDateTime(reader, "DateReviewed"),
-                                    UserProfileId = DbUtils.GetInt(reader, "UserId"),
+                                    UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                                     RateId = DbUtils.GetInt(reader, "RateId"),
                                     IngredientId = DbUtils.GetInt(reader, "IngredientId"),
                                     UserProfile = new UserProfile()
@@ -124,13 +124,13 @@ namespace Capstone.Repositories
                     cmd.CommandText = @"
                     INSERT INTO IngredientReview (RateId, UserProfileId, IngredientId, Review, DateReviewed)
                     OUTPUT INSERTED.Id
-                    VALUES (@rateId, @userId, @ingredientId, @review, @source, @dateReviewed)";
+                    VALUES (@rateId, @userId, @ingredientId, @review,@dateReviewed)";
                     DbUtils.AddParameter(cmd, "@rateId", ingredientReview.RateId);
                     DbUtils.AddParameter(cmd, "@userId", ingredientReview.UserProfileId);
                     DbUtils.AddParameter(cmd, "@ingredientId", ingredientReview.IngredientId);
                     DbUtils.AddParameter(cmd, "@review", ingredientReview.Review);
                     DbUtils.AddParameter(cmd, "@dateReviewed", ingredientReview.DateReviewed);
-
+                    
                     int newlyCreatedId = (int)cmd.ExecuteScalar();
                     ingredientReview.Id = newlyCreatedId;
                 }

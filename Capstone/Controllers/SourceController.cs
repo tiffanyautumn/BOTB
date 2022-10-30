@@ -4,6 +4,7 @@ using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 
 namespace Capstone.Controllers
 {
@@ -28,6 +29,13 @@ namespace Capstone.Controllers
         {
             return Ok(_sourceRepository.GetAllByReviewId(id));
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            return Ok(_sourceRepository.GetSourceById(id));
+        }
+
 
         [HttpPost]
         public IActionResult Post(Source source)
@@ -62,5 +70,7 @@ namespace Capstone.Controllers
             _sourceRepository.DeleteSource(id);
             return NoContent();
         }
+
+       
     }
 }

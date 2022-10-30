@@ -49,6 +49,7 @@ export default function Header({ isLoggedIn, isAdmin, isApproved }) {
                                         <DropdownItem><NavLink tag={RRNavLink} to="/hazard">Hazards</NavLink></DropdownItem>
                                         <DropdownItem><NavLink tag={RRNavLink} to="/type">Types</NavLink></DropdownItem>
                                         <DropdownItem><NavLink tag={RRNavLink} to="/brand">Brands</NavLink></DropdownItem>
+                                        <DropdownItem><NavLink tag={RRNavLink} to="/rate">Ratings</NavLink></DropdownItem>
 
 
                                     </DropdownMenu>

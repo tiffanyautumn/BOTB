@@ -1,6 +1,10 @@
 const baseUrl = '/api/use'
 
 
+export const getUseById = (id) => {
+    return fetch(baseUrl + `/${id}`)
+        .then((res) => res.json())
+}
 
 export const addUse = (use) => {
     return fetch(baseUrl, {

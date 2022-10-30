@@ -10,6 +10,9 @@ import { getIngredientHazardByIngredientId } from "../../modules/ingredientHazar
 import { IngredientHazard } from "./IngredientHazard"
 import { IngredientHazardForm } from "./IngredientHazardForm"
 import { getAllHazards } from "../../modules/hazardManager"
+import { Use } from "./Use"
+import { getSourcesByReviewId } from "../../modules/sourceManager"
+import { IngredientReview } from "../ingredientReview/IngredientReview"
 
 
 export const IngredientDetails = ({ isAdmin, isApproved }) => {
@@ -19,6 +22,7 @@ export const IngredientDetails = ({ isAdmin, isApproved }) => {
     const [useForm, setUseForm] = useState(false)
     const [hazardForm, setHazardForm] = useState(false)
     const [uses, setUses] = useState([])
+    const [useDelete, setUseDelete] = useState(false)
     const [ingredientHazards, setIngredientHazards] = useState([])
     const [hazards, setHazards] = useState([])
     const [hazardDelete, setHazardDelete] = useState(false)
@@ -51,7 +55,6 @@ export const IngredientDetails = ({ isAdmin, isApproved }) => {
             <p>Our Review</p>
             <p>{ingredient?.ingredientReview?.rate?.rating}</p>
             <p>{ingredient?.ingredientReview?.review}</p>
-            <p>{ingredient?.ingredientReview?.source}</p>
             <p>{ingredient?.ingredientReview?.userProfile?.firstName} {ingredient?.ingredientReview?.userProfile?.lastName}</p>
             <p>{ingredient?.ingredientReview?.dateReviewed}</p>
             {
@@ -93,15 +96,13 @@ export const IngredientDetails = ({ isAdmin, isApproved }) => {
                             </p>
                             <p className="Uses panel-item">
                                 <span className="title">Uses
-                                    <button onClick={(() => setUseForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button></span>
+                                    <button onClick={(() => setUseForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button>
+                                    {isAdmin ? <button onClick={(() => setUseDelete(!useDelete))} className="btn"><i class="fa-solid fa-trash-can"></i></button> : ""}
+                                </span>
                                 {
                                     useForm ? <UseForm setUseForm={setUseForm} ingredient={ingredient} getIngredient={getIngredient} getUses={getUses} /> : ""
                                 }
-                                {
-                                    uses.map(
-                                        (u) => <li>{u.description}</li>
-                                    )
-                                }
+                                {uses.map((u) => (<Use use={u} getUses={getUses} useDelete={useDelete} />))}
                             </p>
                             <p className="Hazards panel-item">
                                 <span className="title">Hazards
@@ -120,7 +121,7 @@ export const IngredientDetails = ({ isAdmin, isApproved }) => {
                                 }</span>
                                 {
                                     ingredient.ingredientReview
-                                        ? ingredientReviewDisplay()
+                                        ? <IngredientReview isAdmin={isAdmin} isApproved={isApproved} IngredientReview={ingredient?.ingredientReview} />
                                         : ""
                                 }
 
