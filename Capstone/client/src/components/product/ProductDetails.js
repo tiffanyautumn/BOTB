@@ -65,7 +65,7 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
             </div>
 
             <div className="productdetailsimg">
-                <img alt="Card image cap" className="productDetailImage card-img" src={product?.imageUrl} alt="Card image cap" />
+                <img alt="Card image cap" className="productDetailImage card-img" src={product?.imageUrl} />
             </div>
         </section>
         <section className="productingredientsection">
