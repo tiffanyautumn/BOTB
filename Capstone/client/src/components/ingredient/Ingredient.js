@@ -7,9 +7,7 @@ export const Ingredient = ({ ingredient }) => {
     const navigate = useNavigate()
     return (
         <tr>
-            <td><Button onClick={() => { navigate(`/ingredient/${ingredient.id}`) }}>{ingredient.name}</Button></td>
-            <td>{ingredient.function}</td>
-            <td>{ingredient.safetyInfo}</td>
+            <td><button className="btn" onClick={() => { navigate(`/ingredient/${ingredient.id}`) }}>{ingredient.name}</button></td>
             <td>{ingredient?.ingredientReview?.rate?.rating}</td>
         </tr>
     )

@@ -7,8 +7,7 @@ export const IngredientForm = () => {
     const navigate = useNavigate()
     const [ingredient, updateIngredient] = useState({
         name: "",
-        function: "",
-        safetyInfo: ""
+        imageUrl: ""
     })
 
 
@@ -16,17 +15,14 @@ export const IngredientForm = () => {
     const handleSaveButtonClick = (event) => {
         event.preventDefault()
 
-        if (ingredient.function === "") {
-            ingredient.function = null
-        }
-        if (ingredient.safetyInfo === "") {
-            ingredient.safetyInfo = null
+
+        if (ingredient.imageUrl === "") {
+            ingredient.imageUrl = null
         }
 
         const ingredientToSend = {
             name: ingredient.name,
-            function: ingredient.function,
-            safetyInfo: ingredient.safetyInfo
+            imageUrl: ingredient.imageUrl
         }
 
         return addIngredient(ingredientToSend)
@@ -35,64 +31,52 @@ export const IngredientForm = () => {
             })
     }
     return (<>
-        <Card>
-            <CardBody>
 
-                <Form className="ingredientForm">
-                    <FormGroup>
-                        <Label for="name">Ingredient</Label>
-                        <Input
-                            id="name"
-                            name="name"
-                            type="text"
-                            value={ingredient.name}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredient }
-                                    copy.name = evt.target.value
-                                    updateIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="function">Function</Label>
-                        <Input
-                            id="function"
-                            name="function"
-                            type="text"
-                            value={ingredient.function}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredient }
-                                    copy.function = evt.target.value
-                                    updateIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="safety">Safety Information</Label>
-                        <Input
-                            id="safety"
-                            name="safety"
-                            type="text"
-                            value={ingredient.safetyInfo}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredient }
-                                    copy.safetyInfo = evt.target.value
-                                    updateIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
+        <div className="ingredientform">
+            <h3>Create a new Ingredient</h3>
+
+            <Form className="ingredientForm">
+                <FormGroup>
+                    <Label for="name">Ingredient</Label>
+                    <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={ingredient.name}
+                        onChange={
+                            (evt) => {
+                                const copy = { ...ingredient }
+                                copy.name = evt.target.value
+                                updateIngredient(copy)
+                            }
+                        } />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="function">Image Link</Label>
+                    <Input
+                        id="function"
+                        name="function"
+                        type="text"
+                        value={ingredient.imageUrl}
+                        onChange={
+                            (evt) => {
+                                const copy = { ...ingredient }
+                                copy.imageUrl = evt.target.value
+                                updateIngredient(copy)
+                            }
+                        } />
+                </FormGroup>
 
 
-                    <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
-                        className="btn btn-primary">
-                        Save
-                    </Button>
-                </Form>
+
+                <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
+                    className="btn btn-primary">
+                    Save
+                </Button>
                 <Button onClick={() => navigate("/ingredient")}>Cancel</Button>
-            </CardBody>
-        </Card>
+            </Form>
+
+
+        </div>
     </>)
 }

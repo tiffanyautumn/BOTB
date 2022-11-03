@@ -1,9 +1,11 @@
 ﻿using Capstone.Models;
+using Capstone.Repositories.Interfaces;
 using Capstone.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Capstone.Repositories
 {
@@ -19,12 +21,14 @@ namespace Capstone.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT p.Id, p.Name, p.Brand, p.TypeId, p.Price, p.ImageUrl, t.Type, 
-                              pi.Id as PIId, pi.IngredientId, pi.Active, pi.[Use],
-                              i.Name as IName, i.SafetyInfo
+                       SELECT p.Id, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl, t.Name AS TName, 
+                              pi.Id as PIId, pi.IngredientId, pi.ActiveIngredient, 
+                              b.Name AS BName,
+                              i.Name as IName
                        FROM Product p
-                       LEFT JOIN Type t ON p.TypeId = t.Id
+                       LEFT JOIN [Type] t ON p.TypeId = t.Id
                        LEFT JOIN ProductIngredient pi ON pi.ProductId = p.Id
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
                        LEFT JOIN Ingredient i ON i.Id = pi.IngredientId
                        ORDER BY p.Name";
 
@@ -53,11 +57,9 @@ namespace Capstone.Repositories
                                     {
                                         Id = DbUtils.GetInt(reader, "IngredientId"),
                                         Name = DbUtils.GetString(reader, "IName"),
-                                        SafetyInfo = DbUtils.GetString(reader, "SafetyInfo")
                                     },
                                     ProductId = productId,
-                                    Active = DbUtils.GetBoolean(reader, "Active"),
-                                    Use = DbUtils.GetString(reader, "Use")
+                                    ActiveIngredient = DbUtils.GetBoolean(reader, "ActiveIngredient"),
 
                                 });
                             }
@@ -71,6 +73,120 @@ namespace Capstone.Repositories
             }
         }
 
+        public List<Product> GetProductByTypeId(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id AS ProductId, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl,
+                              b.Name AS BName,
+                              t.Name AS TName, t.Id 
+                       FROM Product p
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
+                       LEFT JOIN Type t on t.Id = p.TypeId
+                       WHERE p.TypeId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var products = new List<Product>();
+                        while (reader.Read())
+                        {
+                            Product product = new Product()
+                            {
+                                
+                                    Id = DbUtils.GetInt(reader, "ProductId"),
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                    BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                    Brand = new Brand()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "BrandId"),
+                                        Name = DbUtils.GetString(reader, "BName")
+                                    },
+                                    Price = DbUtils.GetDecimal(reader, "Price"),
+                                    ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                    TypeId = DbUtils.GetInt(reader, "TypeId"),
+                                    Type = new Type()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "TypeId"),
+                                        Name = DbUtils.GetString(reader, "TName"),
+                                    },
+                                
+                            };
+                            products.Add(product);
+                        }
+
+
+                        return products;
+                    }
+
+
+                }
+            }
+        }
+
+        public List<Product> GetProductByBrandId(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id AS ProductId, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl,
+                              b.Name AS BName,
+                              t.Name AS TName, t.Id 
+                       FROM Product p
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
+                       LEFT JOIN Type t on t.Id = p.TypeId
+                       WHERE p.BrandId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var products = new List<Product>();
+                        while (reader.Read())
+                        {
+                            Product product = new Product()
+                            {
+
+                                Id = DbUtils.GetInt(reader, "ProductId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                Brand = new Brand()
+                                {
+                                    Id = DbUtils.GetInt(reader, "BrandId"),
+                                    Name = DbUtils.GetString(reader, "BName")
+                                },
+                                Price = DbUtils.GetDecimal(reader, "Price"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                TypeId = DbUtils.GetInt(reader, "TypeId"),
+                                Type = new Type()
+                                {
+                                    Id = DbUtils.GetInt(reader, "TypeId"),
+                                    Name = DbUtils.GetString(reader, "TName"),
+                                },
+
+                            };
+                            products.Add(product);
+                        }
+
+
+                        return products;
+                    }
+
+
+                }
+            }
+        }
+
         public Product GetProductById(int id)
         {
             using (SqlConnection conn = Connection)
@@ -80,16 +196,11 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT p.Id, p.Name, p.Brand, p.TypeId, p.Price, p.ImageUrl, t.Type, 
-                              pi.Id as PIId, pi.IngredientId, pi.Active, pi.[Use],
-                              i.Name as IName, i.SafetyInfo,
-                              ir.Id AS ReviewId, ir.RateId, r.Rating
+                       SELECT p.Id, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl, t.Name AS TName,
+                              b.Name AS BName
                        FROM Product p
                        LEFT JOIN Type t ON p.TypeId = t.Id
-                       LEFT JOIN ProductIngredient pi ON pi.ProductId = p.Id
-                       LEFT JOIN Ingredient i ON i.Id = pi.IngredientId
-                       LEFT JOIN IngredientReview ir ON ir.IngredientId = i.Id
-                       LEFT JOIN Rate r ON r.Id = ir.RateId
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
                        WHERE p.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -103,45 +214,10 @@ namespace Capstone.Repositories
                             {
                                 product = (NewProductFromReader(reader));
                             }
-                            if (DbUtils.IsNotDbNull(reader, "PIId"))
-                            {
-                                ProductIngredient productIngredient = null;
-                                product.ProductIngredients.Add( productIngredient = new ProductIngredient()
-                                {
-                                    Id = DbUtils.GetInt(reader, "PIId"),
-                                    IngredientId = DbUtils.GetInt(reader, "IngredientId"),
-                                    Ingredient = new Ingredient()
-                                    {
-                                        Id = DbUtils.GetInt(reader, "IngredientId"),
-                                        Name = DbUtils.GetString(reader, "IName"),
-                                        SafetyInfo = DbUtils.GetString(reader, "SafetyInfo")
-                                    },
-                                    ProductId = id,
-                                    Active = DbUtils.GetBoolean(reader, "Active"),
-                                    Use = DbUtils.GetString(reader, "Use"),
-                                    
-
-                                });
-                            if(DbUtils.IsNotDbNull(reader, "ReviewId"))
-                            {
-                                    productIngredient.Ingredient.IngredientReview = new IngredientReview()
-                                    {
-                                        Id = DbUtils.GetInt(reader, "ReviewId"),
-                                        Rate = new Rate()
-                                        {
-                                            Id = DbUtils.GetInt(reader, "RateId"),
-                                            Rating = DbUtils.GetString(reader, "Rating")
-                                        }
-
-                                    };
-                            }
-                            }
-                        }
                             
-
-                            return product;
-                    }
-                        
+                        }
+                        return product;
+                    }   
                 }
             }
         }
@@ -159,7 +235,7 @@ namespace Capstone.Repositories
                             UPDATE Product
                             SET 
                                 [Name] = @name,
-                                Brand = @brand,
+                                BrandId = @brandId,
                                 TypeId = @typeId,
                                 Price = @price,
                                 ImageUrl = @imageUrl
@@ -168,7 +244,7 @@ namespace Capstone.Repositories
 
                     DbUtils.AddParameter(cmd, "@name", product.Name);
                     DbUtils.AddParameter(cmd, "@id", product.Id);
-                    DbUtils.AddParameter(cmd, "@brand", product.Brand);
+                    DbUtils.AddParameter(cmd, "@brandId", product.BrandId);
                     DbUtils.AddParameter(cmd, "@typeId", product.TypeId);
                     DbUtils.AddParameter(cmd, "@price", product.Price);
                     DbUtils.AddParameter(cmd, "@imageUrl", product.ImageUrl);
@@ -186,11 +262,11 @@ namespace Capstone.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO Product (Name, Brand, TypeId, Price, ImageUrl)
+                    INSERT INTO Product (Name, BrandId, TypeId, Price, ImageUrl)
                     OUTPUT INSERTED.Id
-                    VALUES (@name, @brand, @typeId, @price, @imageUrl)";
+                    VALUES (@name, @brandId, @typeId, @price, @imageUrl)";
                     DbUtils.AddParameter(cmd, "@name", product.Name);
-                    DbUtils.AddParameter(cmd, "@brand", product.Brand);
+                    DbUtils.AddParameter(cmd, "@brandId", product.BrandId);
                     DbUtils.AddParameter(cmd, "@typeId", product.TypeId);
                     DbUtils.AddParameter(cmd, "@price", product.Price);
                     DbUtils.AddParameter(cmd, "@imageUrl", product.ImageUrl);
@@ -225,9 +301,10 @@ namespace Capstone.Repositories
                 using(var cmd = conn.CreateCommand())
                 {
                     var sql = @"
-                    SELECT p.Id, p.[Name], p.Brand, p.TypeId, p.Price, p.ImageUrl
+                    SELECT p.Id, p.[Name], p.BrandId, p.TypeId, p.Price, p.ImageUrl, b.[Name] AS BName
                     FROM Product p
-                    WHERE p.[Name] LIKE @Criterion OR p.Brand LIKE @Criterion";
+                    LEFT JOIN Brand b ON p.BrandId = b.Id
+                    WHERE p.[Name] LIKE @Criterion OR b.Name LIKE @Criterion";
                     cmd.CommandText = sql;
                     DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -239,7 +316,12 @@ namespace Capstone.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
-                                Brand = DbUtils.GetString(reader, "Brand"),
+                                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                Brand = new Brand()
+                                {
+                                    Id = DbUtils.GetInt(reader, "BrandId"),
+                                    Name = DbUtils.GetString(reader, "BName"),
+                                },
                                 Price = DbUtils.GetDecimal(reader, "Price"),
                                 ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                                 TypeId = DbUtils.GetInt(reader, "TypeId"),
@@ -251,25 +333,165 @@ namespace Capstone.Repositories
             }
         }
 
+        public void AddUserProduct(Product product, int id)
+        {
 
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO UserProduct (UserProfileId, ProductId)
+                    OUTPUT INSERTED.Id
+                    VALUES (@userProfileId, @productId)";
+                    DbUtils.AddParameter(cmd, "@userProfileId", id);
+                    DbUtils.AddParameter(cmd, "@productId", product.Id);
+
+                    int newlyCreatedId = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public Product GetUserProductById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id AS productId, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl, t.Name AS TName,
+                              b.Name AS BName,
+                              up.Id, 
+                       FROM UserProduct up
+                       LEFT JOIN Product p ON up.ProductId = p.Id
+                       LEFT JOIN Type t ON p.TypeId = t.Id
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
+                       
+                       WHERE up.Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Product product = null;
+                        while (reader.Read())
+                        {
+                            if (product == null)
+                            {
+                                product = (NewProductFromReader(reader));
+                            }
+
+                        }
+                        return product;
+                    }
+                }
+            }
+        }
+
+        public List<UserProduct> GetUserProductsByUserId(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT up.Id,
+                              b.Name AS BName, b.Id AS BrandId,
+                              p.Name, p.Price, p.ImageUrl, p.TypeId, p.Id AS ProductId,
+                              t.Name AS TName, t.Id AS TypeId
+                       FROM UserProduct up
+                       LEFT JOIN Product p ON p.Id = up.ProductId
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
+                       LEFT JOIN Type t on t.Id = p.TypeId
+                       WHERE up.UserProfileId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var userProducts = new List<UserProduct>();
+                        while (reader.Read())
+                        {
+                            UserProduct userProduct = new UserProduct()
+                            {
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Product = new Product()
+                                {
+                                    Id = DbUtils.GetInt(reader, "ProductId"),
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                    BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                    Brand = new Brand()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "BrandId"),
+                                        Name = DbUtils.GetString(reader, "BName")
+                                    },
+                                    Price = DbUtils.GetDecimal(reader, "Price"),
+                                    ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                    TypeId = DbUtils.GetInt(reader, "TypeId"),
+                                    Type = new Type()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "TypeId"),
+                                        Name = DbUtils.GetString(reader, "TName"),
+                                    },
+                                }
+                            };
+                            userProducts.Add(userProduct);
+                        }
+
+
+                        return userProducts;
+                    }
+                        
+
+                    }
+                }
+            }
+        
+        public void DeleteUserProduct(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM UserProduct
+                                       WHERE Id = @id";
+
+                    DbUtils.AddParameter(cmd, "@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         private Product NewProductFromReader(SqlDataReader reader)
         {
             return new Product
             {
                 Id = DbUtils.GetInt(reader, "Id"),
                 Name = DbUtils.GetString(reader, "Name"),
-                Brand = DbUtils.GetString(reader, "Brand"),
+                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                Brand = new Brand()
+                {
+                    Id = DbUtils.GetInt(reader, "BrandId"),
+                    Name = DbUtils.GetString(reader, "BName")
+                },
                 Price = DbUtils.GetDecimal(reader, "Price"),
                 ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                 TypeId = DbUtils.GetInt(reader, "TypeId"),
                 Type = new Type()
                 {
                     Id = DbUtils.GetInt(reader, "TypeId"),
-                    Name = DbUtils.GetString(reader, "Type"),
+                    Name = DbUtils.GetString(reader, "TName"),
                 },
                 ProductIngredients = new List<ProductIngredient>()
             };
         }
+
+       
     }
 }
 

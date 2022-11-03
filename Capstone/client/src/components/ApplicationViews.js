@@ -1,6 +1,11 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom"
+import { BrandForm } from "./brand/BrandForm";
+import { BrandList } from "./brand/BrandList";
+import { HazardForm } from "./hazards/HazardForm";
+import { HazardList } from "./hazards/HazardList";
 import Hello from "./Hello";
+import { Home } from "./Home";
 import { IngredientContainer } from "./ingredient/IngredientContainer";
 import { IngredientDelete } from "./ingredient/IngredientDelete";
 import { IngredientDetails } from "./ingredient/IngredientDetails";
@@ -17,9 +22,14 @@ import { ProductDetails } from "./product/ProductDetails";
 import { ProductEdit } from "./product/ProductEdit";
 import { ProductForm } from "./product/ProductForm";
 import { ProductList } from "./product/ProductList";
+import { ProductListBrand } from "./product/ProductListBrand";
+import { ProductListType } from "./product/ProductListType";
+import { RateForm } from "./rate/RateForm";
+import { RateList } from "./rate/RateList";
 import Register from "./Register";
 import { TypeForm } from "./type/TypeForm";
 import { TypeList } from "./type/TypeList";
+import { UserProductList } from "./userProduct/UserProductList";
 
 
 export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
@@ -28,7 +38,7 @@ export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
             <Route path="/">
                 <Route
                     index
-                    element={isLoggedIn ? <Hello /> : <Navigate to="/login" />}
+                    element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
                 />
                 <Route path="product/">
                     <Route index element={isLoggedIn ? <ProductContainer isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
@@ -36,6 +46,8 @@ export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
                     <Route path=":productId" element={isLoggedIn ? <ProductDetails isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
                     <Route path="delete/:productId" element={isLoggedIn && isAdmin ? <ProductDelete isAdmin={isAdmin} /> : <Navigate to="/login" />} />
                     <Route path="edit/:productId" element={isLoggedIn && isAdmin ? <ProductEdit isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="brand/:brandId" element={isLoggedIn ? <ProductListBrand isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
+                    <Route path="type/:typeId" element={isLoggedIn ? <ProductListType isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
                 </Route>
                 <Route path="ingredient/">
                     <Route index element={isLoggedIn ? <IngredientContainer isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
@@ -50,8 +62,25 @@ export default function ApplicationViews({ isLoggedIn, isApproved, isAdmin }) {
                     <Route path="edit/:ingredientReviewId" element={isLoggedIn && isApproved ? <IngredientReviewEdit isApproved={isApproved} /> : <Navigate to="/login" />} />
                 </Route>
                 <Route path="type/">
-                    <Route index element={isLoggedIn && isAdmin ? <TypeList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route index element={isLoggedIn ? <TypeList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
                     <Route path="create" element={isLoggedIn && isAdmin ? <TypeForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+                <Route path="brand/">
+                    <Route index element={isLoggedIn ? <BrandList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="create" element={isLoggedIn && isAdmin ? <BrandForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+                <Route path="hazard/">
+                    <Route index element={isLoggedIn ? <HazardList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="create" element={isLoggedIn && isAdmin ? <HazardForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+                <Route path="rate/">
+                    <Route index element={isLoggedIn ? <RateList isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                    <Route path="create" element={isLoggedIn && isAdmin ? <RateForm isAdmin={isAdmin} /> : <Navigate to="/login" />} />
+                </Route>
+
+                <Route path="myProducts/">
+                    <Route index element={isLoggedIn ? <UserProductList isAdmin={isAdmin} isApproved={isApproved} /> : <Navigate to="/login" />} />
+
                 </Route>
 
 

@@ -26,8 +26,8 @@ export const ProductIngredientDelete = ({ ProductIngredient, setDeleteActive, ge
             })
     }
     return <>
-        <td>Are you sure that you want to delete {ProductIngredient.ingredient.name}?</td>
-        <td><Button onClick={() => { deleteButton() }}>Delete</Button></td>
-        <td><Button onClick={() => { setDeleteActive(false) }}>Cancel</Button></td>
+        <p>Are you sure that you want to delete {ProductIngredient.ingredient.name}?</p>
+        <Button onClick={() => { deleteButton() }}>Delete</Button>
+        <Button onClick={() => { setDeleteActive(false) }}>Cancel</Button>
     </>
 }

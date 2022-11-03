@@ -21,7 +21,7 @@ export const IngredientReviewDelete = () => {
     const deleteButton = () => {
         return deleteIngredientReview(ingredientReview.id)
             .then(() => {
-                navigate("/ingredient")
+                navigate(`/ingredient/${ingredientReview.ingredientId}`)
             })
     }
     return <>

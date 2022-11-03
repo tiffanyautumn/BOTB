@@ -1,94 +1,102 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardBody, CardImg, CardText, Col, Row, Table } from "reactstrap"
-import { getProductById } from "../../modules/productManager"
+import { Accordion, Button, Card, CardBody, CardImg, CardText, Col, Row, Table } from "reactstrap"
+import { addUserProduct, getProductById } from "../../modules/productManager"
 import { ProductIngredient } from "./ProductIngredient"
 import { ProductIngredientForm } from "./ProductIngredientForm"
 import './Product.css';
+import { getPIByProductId } from "../../modules/productIngredientManager"
 
 export const ProductDetails = ({ isAdmin, isApproved }) => {
+    const [open, setOpen] = useState('1');
     const { productId } = useParams()
     const navigate = useNavigate()
     const [product, setProduct] = useState([])
+    const [productIngredients, setProductIngredients] = useState([])
     const [formActive, setFormActive] = useState(false)
+    const toggle = (id) => {
+        if (open === id) {
+            setOpen();
+        } else {
+            setOpen(id);
+        }
+    };
 
     const getProduct = () => {
         getProductById(productId).then(p => setProduct(p))
     }
 
+    const getPIs = () => {
+        getPIByProductId(productId).then(pi => setProductIngredients(pi))
+    }
     useEffect(
         () => {
             getProduct()
+            getPIs()
         }, []
     )
 
 
     return <>
+        <section className="productdetails">
 
-        <Card key={product.id} style={{
-            width: '75%'
-        }}
-        >
+            <div className="productdetailsinfo">
+                <p>
+                    {
+                        isAdmin
+                            ? <>
+                                <button className="btn" onClick={(() => navigate(`/product/delete/${product.id}`))}><i class="fa-solid fa-trash-can"></i></button>
+                                <button className="btn" onClick={(() => navigate(`/product/edit/${product.id}`))}><i className="fa-solid fa-eye-dropper"></i></button></>
+                            : ""
 
-            <CardBody>
+                    }
+                </p>
 
-                <Card style={{
-                    width: '15%'
-                }}>
-                    <CardImg className="productDetailImage" height="15%" width="25%" src={product?.imageUrl} alt="Card image cap" />
-                </Card>
+                {/* <button className="btn"><i class="fa-solid fa-comment-dollar"></i></button> */}
 
-                <CardText>
-                    <p>{product?.brand}</p>
-                    <p>{product?.name}</p>
-                    <p>{product?.type?.name}</p>
-                    ${product?.price?.toFixed(2)}
-                </CardText>
+                <p className="Name panel-item">
+                    <span className="title"> {product?.name} <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button></span>
+                    <span className="title">{product?.brand?.name} </span>
+                </p>
+                <p> {product?.type?.name}</p>
+                <p>${product?.price?.toFixed(2)}</p>
 
 
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Use</th>
-                            <th>Safety</th>
-                            <th>Rating</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            product?.productIngredients?.map((pi) => (
-                                <ProductIngredient productIngredient={pi} getProduct={getProduct} key={pi.id} isAdmin={isAdmin} isApproved={isApproved} />
-                            ))
-                        }
-                    </tbody>
+            </div>
 
-                </Table>
+            <div className="productdetailsimg">
+                <img alt="Card image cap" className="productDetailImage card-img" src={product?.imageUrl} />
+            </div>
+        </section>
+        <section className="productingredientsection">
+            <p className="product-title">Product Ingredients {
+                isApproved
+                    ? <button className="btn" onClick={(() => setFormActive(!formActive))}><i className="fa-solid fa-plus"></i></button>
+                    : ""
+            }</p>
+            <div className="productIngredientList">
+
+                <Accordion open={open} toggle={toggle}>
+                    {
+                        productIngredients.map((pi) => (
+                            <div key={pi.id} className="productIngredient"><ProductIngredient getPIs={getPIs} productIngredient={pi} getProduct={getProduct} key={pi.id} isAdmin={isAdmin} isApproved={isApproved} /></div>
+                        ))
+                    }
+                </Accordion>
+            </div>
+
+            <section className="piformsection">
                 {
                     formActive
-                        ? <ProductIngredientForm product={product} setFormActive={setFormActive} getProduct={getProduct} />
+                        ? <div className="piform"><ProductIngredientForm getPIs={getPIs} product={product} setFormActive={setFormActive} getProduct={getProduct} /></div>
                         : ""
 
                 }
-                {
-                    isApproved
-                        ? <p><Button onClick={(() => setFormActive(true))}>Add a new ingredient</Button></p>
-                        : ""
-                }
-                {
-                    isAdmin
-                        ? <>
-                            <Button onClick={(() => navigate(`/product/delete/${product.id}`))}>delete</Button>
-                            <Button onClick={(() => navigate(`/product/edit/${product.id}`))}>edit</Button></>
-                        : ""
+            </section>
+        </section>
 
-                }
 
-            </CardBody>
 
-        </Card >
+
     </>
 }

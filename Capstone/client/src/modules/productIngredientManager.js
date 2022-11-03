@@ -6,6 +6,11 @@ export const getProductIngredientById = (id) => {
         .then((res) => res.json())
 }
 
+export const getPIByProductId = (id) => {
+    return fetch(baseUrl + `/product/${id}`)
+        .then((res) => res.json())
+}
+
 export const addProductIngredient = (ProductIngredient) => {
     return fetch(baseUrl, {
         method: "POST",

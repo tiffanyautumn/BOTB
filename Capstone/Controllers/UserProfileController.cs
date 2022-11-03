@@ -1,5 +1,5 @@
 ﻿using Capstone.Models;
-using Capstone.Repositories;
+using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +44,7 @@ namespace Capstone.Controllers
         [HttpPost]
         public IActionResult Post(UserProfile profile)
         {
-            profile.RoleId = 3;
+            profile.UserTypeId = 3;
             try
             {
                 _userProfileRepository.Add(profile);

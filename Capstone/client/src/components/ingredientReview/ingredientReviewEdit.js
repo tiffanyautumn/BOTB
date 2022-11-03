@@ -13,8 +13,6 @@ export const IngredientReviewEdit = () => {
     const [ingredientReview, updateIngredientReview] = useState({
         rateId: 0,
         review: "",
-        source: "",
-        userId: 0,
         id: 0,
         ingredientId: 0
     })
@@ -49,8 +47,6 @@ export const IngredientReviewEdit = () => {
             rateId: parseInt(ingredientReview.rateId),
             ingredientId: parseInt(ingredientReview.ingredientId),
             review: ingredientReview.review,
-            source: ingredientReview.source,
-            userId: parseInt(ingredientReview.userId),
             id: parseInt(ingredientReview.id)
         }
 
@@ -80,21 +76,6 @@ export const IngredientReviewEdit = () => {
                                 }
                             } />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="source">Source</Label>
-                        <Input
-                            id="source"
-                            name="source"
-                            type="text"
-                            value={ingredientReview.source}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredientReview }
-                                    copy.source = evt.target.value
-                                    updateIngredientReview(copy)
-                                }
-                            } />
-                    </FormGroup>
 
                     <FormGroup>
                         <Label for="rateSelect">Rating</Label>
@@ -115,33 +96,16 @@ export const IngredientReviewEdit = () => {
                             ))}
                         </Input>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="userSelect">Reviewer</Label>
-                        <Input
-                            id="userSelect"
-                            name="userId"
-                            type="select"
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredientReview }
-                                    copy.userId = evt.target.value
-                                    updateIngredientReview(copy)
-                                }
-                            }>
 
-                            {users.map((u) => (
-                                <option value={u.id} key={u.id}>{u.firstName} {u.lastName}</option>
-                            ))}
-                        </Input>
-                    </FormGroup>
 
 
                     <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
                         className="btn btn-primary">
                         Save
                     </Button>
+                    <Button onClick={() => navigate(`/ingredient/${ingredientReview.ingredientId}`)}>Cancel</Button>
                 </Form>
-                <Button onClick={() => navigate(`/ingredient/${ingredientReview.ingredientId}`)}>Cancel</Button>
+
             </CardBody>
         </Card>
     </>)

@@ -1,8 +1,9 @@
 ﻿using Capstone.Models;
-using Capstone.Repositories;
+using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 
 namespace Capstone.Controllers
 {
@@ -11,10 +12,12 @@ namespace Capstone.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
+        private readonly IUserProfileRepository _userProfileRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository, IUserProfileRepository userProfileRepository)
         {
             _productRepository = productRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         [HttpGet]
@@ -27,6 +30,18 @@ namespace Capstone.Controllers
         public IActionResult GetById(int id)
         {
             return Ok(_productRepository.GetProductById(id));
+        }
+
+        [HttpGet("brand/{id}")]
+        public IActionResult GetByBrandId(int id)
+        {
+            return Ok(_productRepository.GetProductByBrandId(id));
+        }
+
+        [HttpGet("type/{id}")]
+        public IActionResult GetByTypeId(int id)
+        {
+            return Ok(_productRepository.GetProductByTypeId(id));
         }
 
         [HttpPost]
@@ -67,6 +82,50 @@ namespace Capstone.Controllers
         {
             _productRepository.DeleteProduct(id);
             return NoContent();
+        }
+
+        [HttpDelete("delete/userProduct/{id}")]
+        public IActionResult DeleteUserProduct(int id)
+        {
+            _productRepository.DeleteUserProduct(id);
+            return NoContent();
+        }
+
+       
+        [HttpPost("create/userProduct")]
+        public IActionResult PostUserProduct(Product product)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            try
+            {
+                _productRepository.AddUserProduct(product, currentUserProfile.Id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+
+        }
+
+        [HttpGet("userProduct/{id}")]
+        public IActionResult GetUserProductById(int id)
+        {
+            return Ok(_productRepository.GetUserProductById(id));
+        }
+
+        [HttpGet("getUserProducts")]
+        public IActionResult GetUserProductsByUserId()
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            return Ok(_productRepository.GetUserProductsByUserId(currentUserProfile.Id));
+        }
+
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseId(firebaseUserId);
         }
     }
 }

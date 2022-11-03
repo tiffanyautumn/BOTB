@@ -1,3 +1,145 @@
 .productDetailImage {
-    max-height: 50%;
+    max-height: 30em;
+}
+
+.typewrapper {
+    padding-bottom: 10px;
+    vertical-align: baseline;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.flexbox {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    margin: 0 auto;
+}
+
+.search {
+    width: 100%;
+    align-items: center;
+}
+
+.types {
+    padding: 42px 20px 28px;
+    display: block
+}
+
+.typebox {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 140px);
+    gap: 0 10px;
+    justify-content: center;
+    padding: 50px
+}
+
+.products-header {
+    margin-top: 8%;
+    margin-bottom: 3%;
+    text-align: center;
+    background-color: #e3a26d;
+    width: 65%;
+}
+
+.productIngredientList {
+    display: flex;
+    justify-content: center;
+}
+
+.productIngredient {
+    width: 100%
+}
+
+.product-title {
+    display: block;
+    font-family: RalewaySemiBold, sans-serif;
+    font-weight: 600;
+    padding-bottom: 9px;
+    text-align: center;
+}
+
+.accordion {
+    width: 50%
+}
+
+.productdetails {
+    display: flex;
+    justify-content: center;
+    gap: 3%;
+    margin-bottom: 8%;
+}
+
+.card-body {
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.productdetailsimg {
+    max-height: 30em;
+    position: relative;
+    align-self: center;
+}
+
+.productdetailsinfo {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+    margin-top: 15%;
+    /* background-color: white; */
+    /* padding-left: 8%;
+    padding-right: 8%;
+    padding-top: 3%; */
+}
+
+.productingredientsection {
+    margin-bottom: 15%;
+}
+
+.piform {
+    width: 50%
+}
+
+.piformsection {
+    display: flex;
+    justify-content: center;
+}
+
+.productlisttype {
+    padding-top: 10%;
+}
+
+.container-p {
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 65%;
+    align-self: center;
+}
+
+.card-img-top {
+    max-height: 14em;
+    max-width: fit-content;
+}
+
+.productlist-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.psection {
+    display: flex;
+    justify-content: center;
+}
+
+.pform {
+    width: 65%;
+    margin-top: 8%;
+}
+
+.psection {
+    display: flex;
+    justify-content: center;
 }

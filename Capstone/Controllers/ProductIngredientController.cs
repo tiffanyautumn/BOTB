@@ -1,5 +1,5 @@
 ﻿using Capstone.Models;
-using Capstone.Repositories;
+using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +21,11 @@ namespace Capstone.Controllers
             return Ok(_productIngredientRepository.GetProductIngredientById(id));
         }
 
+        [HttpGet("product/{id}")]
+        public IActionResult GetByProductId(int id)
+        {
+            return Ok(_productIngredientRepository.GetProductIngredientsByProductId(id));
+        }
         [HttpPost]
         public IActionResult Post(ProductIngredient productIngredient)
         {

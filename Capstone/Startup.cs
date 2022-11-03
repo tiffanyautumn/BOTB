@@ -1,4 +1,5 @@
 using Capstone.Repositories;
+using Capstone.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,8 +36,13 @@ namespace Capstone
             services.AddTransient<IIngredientRepository, IngredientRepository>();   
             services.AddTransient<IIngredientReviewRepository, IngredientReviewRepository>();
             services.AddTransient<IProductIngredientRepository, ProductIngredientRepository>();
+            services.AddTransient<IBrandRepository, BrandRepository>();
             services.AddTransient<IRateRepository, RateRepository>();
-
+            services.AddTransient<IUseRepository, UseRepository>();
+            services.AddTransient<IHazardRepository, HazardRepository>();
+            services.AddTransient<IIngredientHazardRepository, IngredientHazardRepository>();
+            services.AddTransient<ISourceRepository, SourceRepository>();
+            services.AddTransient<IProductReviewRepository, ProductReviewRepository>();
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
             var googleTokenUrl = $"https://securetoken.google.com/{firebaseProjectId}";
             services
