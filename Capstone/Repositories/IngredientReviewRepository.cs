@@ -103,7 +103,7 @@ namespace Capstone.Repositories
 
 
                     DbUtils.AddParameter(cmd, "@rateId", ingredientReview.RateId);
-                    DbUtils.AddParameter(cmd, "@Userid", ingredientReview.UserProfileId);
+                    DbUtils.AddParameter(cmd, "@UserProfileid", ingredientReview.UserProfileId);
                     DbUtils.AddParameter(cmd, "@IngredientId", ingredientReview.IngredientId);
                     DbUtils.AddParameter(cmd, "@review", ingredientReview.Review);
                     DbUtils.AddParameter(cmd, "@dateReviewed", ingredientReview.DateReviewed);

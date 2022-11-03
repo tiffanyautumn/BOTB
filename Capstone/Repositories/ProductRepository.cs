@@ -73,6 +73,120 @@ namespace Capstone.Repositories
             }
         }
 
+        public List<Product> GetProductByTypeId(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id AS ProductId, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl,
+                              b.Name AS BName,
+                              t.Name AS TName, t.Id 
+                       FROM Product p
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
+                       LEFT JOIN Type t on t.Id = p.TypeId
+                       WHERE p.TypeId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var products = new List<Product>();
+                        while (reader.Read())
+                        {
+                            Product product = new Product()
+                            {
+                                
+                                    Id = DbUtils.GetInt(reader, "ProductId"),
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                    BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                    Brand = new Brand()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "BrandId"),
+                                        Name = DbUtils.GetString(reader, "BName")
+                                    },
+                                    Price = DbUtils.GetDecimal(reader, "Price"),
+                                    ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                    TypeId = DbUtils.GetInt(reader, "TypeId"),
+                                    Type = new Type()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "TypeId"),
+                                        Name = DbUtils.GetString(reader, "TName"),
+                                    },
+                                
+                            };
+                            products.Add(product);
+                        }
+
+
+                        return products;
+                    }
+
+
+                }
+            }
+        }
+
+        public List<Product> GetProductByBrandId(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT p.Id AS ProductId, p.Name, p.BrandId, p.TypeId, p.Price, p.ImageUrl,
+                              b.Name AS BName,
+                              t.Name AS TName, t.Id 
+                       FROM Product p
+                       LEFT JOIN Brand b ON b.Id = p.BrandId
+                       LEFT JOIN Type t on t.Id = p.TypeId
+                       WHERE p.BrandId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var products = new List<Product>();
+                        while (reader.Read())
+                        {
+                            Product product = new Product()
+                            {
+
+                                Id = DbUtils.GetInt(reader, "ProductId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                BrandId = DbUtils.GetInt(reader, "BrandId"),
+                                Brand = new Brand()
+                                {
+                                    Id = DbUtils.GetInt(reader, "BrandId"),
+                                    Name = DbUtils.GetString(reader, "BName")
+                                },
+                                Price = DbUtils.GetDecimal(reader, "Price"),
+                                ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                                TypeId = DbUtils.GetInt(reader, "TypeId"),
+                                Type = new Type()
+                                {
+                                    Id = DbUtils.GetInt(reader, "TypeId"),
+                                    Name = DbUtils.GetString(reader, "TName"),
+                                },
+
+                            };
+                            products.Add(product);
+                        }
+
+
+                        return products;
+                    }
+
+
+                }
+            }
+        }
+
         public Product GetProductById(int id)
         {
             using (SqlConnection conn = Connection)

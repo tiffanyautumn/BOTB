@@ -7,6 +7,8 @@ namespace Capstone.Repositories.Interfaces
     {
         List<Product> GetAll();
         Product GetProductById(int id);
+        List<Product> GetProductByBrandId(int id);
+        List<Product> GetProductByTypeId(int id);
         void UpdateProduct(Product product);
         void AddProduct(Product product);
         void DeleteProduct(int id);

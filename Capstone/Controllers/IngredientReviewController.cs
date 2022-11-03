@@ -54,6 +54,8 @@ namespace Capstone.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, IngredientReview ingredientReview)
         {
+            var currentUserProfile = GetCurrentUserProfile();
+            ingredientReview.UserProfileId = currentUserProfile.Id;
             if (id != ingredientReview.Id)
             {
                 return BadRequest();

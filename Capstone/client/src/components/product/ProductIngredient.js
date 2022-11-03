@@ -20,7 +20,19 @@ export const ProductIngredient = ({ productIngredient, getProduct, isAdmin, isAp
                     formActive || deleteActive
                         ? ""
                         : <>
-
+                            <p className="Review panel-item">
+                                <span className="title"><button className="btn" onClick={(() => { navigate(`/ingredient/${productIngredient.ingredientId}`) })}> View Ingredient Details</button>
+                                    {
+                                        isAdmin
+                                            ? <button className="btn" onClick={(() => { setDeleteActive(true) })}><i class="fa-solid fa-trash-can"></i></button>
+                                            : ""
+                                    }
+                                    {
+                                        isApproved
+                                            ? <button className="btn" onClick={(() => { setFormActive(true) })}><i className="fa-solid fa-eye-dropper"></i></button>
+                                            : ""
+                                    }
+                                </span></p>
                             <section className="ingredient-details">
                                 <p className="Review panel-item">
                                     <span className="title">Rating
@@ -35,20 +47,13 @@ export const ProductIngredient = ({ productIngredient, getProduct, isAdmin, isAp
                                     {productIngredient.uses.map((u) => { return <li>{u.description}</li> })}
 
                                 </p>
-                                <Button onClick={(() => { navigate(`/ingredient/${productIngredient.ingredientId}`) })}>Details</Button>
+
                             </section>
+
+
                         </>
                 }
-                {
-                    isAdmin
-                        ? <td><Button onClick={(() => { setDeleteActive(true) })}>Delete</Button></td>
-                        : ""
-                }
-                {
-                    isApproved
-                        ? <td><Button onClick={(() => { setFormActive(true) })}>Edit</Button></td>
-                        : ""
-                }
+
 
                 {
                     formActive

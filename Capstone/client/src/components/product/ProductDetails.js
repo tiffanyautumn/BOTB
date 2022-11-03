@@ -38,61 +38,65 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
 
 
     return <>
+        <section className="productdetails">
 
-        <Card key={product.id} style={{
-            width: '75%'
-        }}
-        >
+            <div className="productdetailsinfo">
+                <p>
+                    {
+                        isAdmin
+                            ? <>
+                                <button className="btn" onClick={(() => navigate(`/product/delete/${product.id}`))}><i class="fa-solid fa-trash-can"></i></button>
+                                <button className="btn" onClick={(() => navigate(`/product/edit/${product.id}`))}><i className="fa-solid fa-eye-dropper"></i></button></>
+                            : ""
 
-            <CardBody>
+                    }
+                </p>
 
-                <Card style={{
-                    width: '15%'
-                }}>
-                    <CardImg className="productDetailImage" height="15%" width="25%" src={product?.imageUrl} alt="Card image cap" />
-                </Card>
-                <button className="btn"><i class="fa-solid fa-comment-dollar"></i></button>
-                <CardText>
-                    <p>{product?.brand?.name}</p>
-                    <p>{product?.name} <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button></p>
-                    <p>{product?.type?.name}</p>
-                    ${product?.price?.toFixed(2)}
-                </CardText>
+                {/* <button className="btn"><i class="fa-solid fa-comment-dollar"></i></button> */}
+
+                <p className="Name panel-item">
+                    <span className="title"> {product?.name} <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button></span>
+                    <span className="title">{product?.brand?.name} </span>
+                </p>
+                <p> {product?.type?.name}</p>
+                <p>${product?.price?.toFixed(2)}</p>
 
 
+            </div>
 
-                <div>
-                    <Accordion open={open} toggle={toggle}>
-                        {
-                            productIngredients.map((pi) => (
-                                <ProductIngredient getPIs={getPIs} productIngredient={pi} getProduct={getProduct} key={pi.id} isAdmin={isAdmin} isApproved={isApproved} />
-                            ))
-                        }
-                    </Accordion>
-                </div>
+            <div className="productdetailsimg">
+                <img alt="Card image cap" className="productDetailImage card-img" src={product?.imageUrl} alt="Card image cap" />
+            </div>
+        </section>
+        <section className="productingredientsection">
+            <p className="product-title">Product Ingredients {
+                isApproved
+                    ? <button className="btn" onClick={(() => setFormActive(!formActive))}><i className="fa-solid fa-plus"></i></button>
+                    : ""
+            }</p>
+            <div className="productIngredientList">
 
+                <Accordion open={open} toggle={toggle}>
+                    {
+                        productIngredients.map((pi) => (
+                            <div key={pi.id} className="productIngredient"><ProductIngredient getPIs={getPIs} productIngredient={pi} getProduct={getProduct} key={pi.id} isAdmin={isAdmin} isApproved={isApproved} /></div>
+                        ))
+                    }
+                </Accordion>
+            </div>
+
+            <section className="piformsection">
                 {
                     formActive
-                        ? <ProductIngredientForm getPIs={getPIs} product={product} setFormActive={setFormActive} getProduct={getProduct} />
+                        ? <div className="piform"><ProductIngredientForm getPIs={getPIs} product={product} setFormActive={setFormActive} getProduct={getProduct} /></div>
                         : ""
 
                 }
-                {
-                    isApproved
-                        ? <p><Button onClick={(() => setFormActive(true))}>Add a new ingredient</Button></p>
-                        : ""
-                }
-                {
-                    isAdmin
-                        ? <>
-                            <Button onClick={(() => navigate(`/product/delete/${product.id}`))}>delete</Button>
-                            <Button onClick={(() => navigate(`/product/edit/${product.id}`))}>edit</Button></>
-                        : ""
+            </section>
+        </section>
 
-                }
 
-            </CardBody>
 
-        </Card >
+
     </>
 }

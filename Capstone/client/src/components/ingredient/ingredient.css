@@ -9,3 +9,81 @@
     font-weight: 600;
     padding-bottom: 9px;
 }
+
+.ingredients-header {
+    margin-top: 10%;
+    text-align: center;
+    background-color: #e3a26d;
+    color: white;
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ingredientdetails {
+
+    justify-content: center;
+}
+
+.ingredientdetails {
+    width: 65%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color: white;
+    margin-top: 8%;
+}
+
+.title-header {
+    display: block;
+    font-family: RalewaySemiBold, sans-serif;
+    font-weight: 600;
+    padding-bottom: 9px;
+    text-align: center;
+    font-size: larger;
+}
+
+.container {
+    width: 65%;
+    background-color: white;
+}
+
+/* #createIngredient {
+    padding-top: 5%;
+    padding-bottom: 3%; */
+
+
+.ingredientform {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10%;
+    justify-content: center;
+}
+
+h3 {
+    text-align: center;
+}
+
+.ingredientForm {
+    width: 65%;
+    align-self: center;
+
+
+
+}
+
+.ingredientlist-section {
+    display: flex;
+}
+
+#ingredients-header-section {
+    display: flex;
+    justify-content: center;
+}
+
+.isection {
+    display: flex;
+    justify-content: center;
+}

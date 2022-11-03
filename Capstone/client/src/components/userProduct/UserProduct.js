@@ -3,14 +3,15 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, CardImg, CardText, Col } from "reactstrap";
 import { NavLink as RRNavLink } from "react-router-dom";
 import { addUserProduct, deleteUserProduct } from "../../modules/productManager";
+import './UserProduct.css'
 
-export const UserProduct = ({ product, userProduct, userProductId, getAllUserProducts }) => {
+export const UserProduct = ({ product, userProduct, userProductId, getUserProducts }) => {
     const navigate = useNavigate()
 
     const deleteButton = () => {
         return deleteUserProduct(userProductId)
             .then(() => {
-                getAllUserProducts()
+                getUserProducts()
             })
     }
 
@@ -19,16 +20,15 @@ export const UserProduct = ({ product, userProduct, userProductId, getAllUserPro
             width: '18rem'
         }}
         >
+            <button className="btn" onClick={(() => deleteButton())} ><i className="fa-solid fa-xmark"></i></button>
             <Col>
-                <CardBody>
+                <CardBody onClick={() => navigate(`/product/${product?.id}`)}>
                     <CardImg top width="100%" src={product?.imageUrl} alt="Card image cap" />
 
                     <p>{product?.brand?.name}</p>
 
-                    <Button onClick={() => navigate(`/product/${product?.id}`)}>{product?.name}</Button>
-                    {
-                        userProduct ? <button className="btn" onClick={(() => deleteButton())} ><i className="fa-solid fa-xmark"></i></button> : <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button>
-                    }
+                    <p>{product?.name}</p>
+
 
                 </CardBody>
             </Col>

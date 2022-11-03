@@ -1,36 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Button, Card, CardBody, CardImg, CardText, Col } from "reactstrap";
+import { Button, Card, CardBody, CardImg, CardText, Col, Nav, NavItem, Popover, PopoverHeader, UncontrolledPopover } from "reactstrap";
 import { NavLink as RRNavLink } from "react-router-dom";
-import { addUserProduct, deleteUserProduct } from "../../modules/productManager";
+import { addUserProduct, deleteUserProduct, getAllUserProducts } from "../../modules/productManager";
 
-export const Product = ({ product, userProduct, userProductId, getAllUserProducts }) => {
+export const Product = ({ product, userProductId }) => {
     const navigate = useNavigate()
+    const [userProduct, setUserProduct] = useState([])
+    const [setisUserProduct, setIsUserProduct] = useState(null)
 
-    const deleteButton = () => {
-        return deleteUserProduct(userProductId)
-            .then(() => {
-                getAllUserProducts()
-            })
+    const getUserProduct = () => {
+        getAllUserProducts().then(resp => setUserProduct(resp))
+
     }
 
-    return (
-        <Card key={product?.id} style={{
-            width: '18rem'
-        }}
-        >
-            <Col>
-                <CardBody>
-                    <CardImg top width="100%" src={product?.imageUrl} alt="Card image cap" />
 
+    useEffect(() => {
+        getUserProduct();
+
+    }, []);
+
+
+
+    return (
+
+        <Card key={product?.id} style={{
+            width: '16em'
+        }}>
+            <div><React.StrictMode><Button id="Popover1" type="button" onClick={(() => addUserProduct(product))} className="btn"><i className="fa-solid fa-person-circle-plus"></i></Button>
+                <UncontrolledPopover flip target="Popover1" trigger="click"><PopoverHeader>Added to my Product List</PopoverHeader></UncontrolledPopover></React.StrictMode></div>
+            <Col>
+                <CardBody onClick={(() => navigate(`/product/${product?.id}`))} >
+                    <CardImg top src={product?.imageUrl} alt="Card image cap" />
+
+
+                    <p>{product?.name}</p>
                     <p>{product?.brand?.name}</p>
 
-                    <Button onClick={() => navigate(`/product/${product?.id}`)}>{product?.name}</Button>
-                    {
-                        userProduct ? <button className="btn" onClick={(() => deleteButton())} ><i className="fa-solid fa-xmark"></i></button> : <button onClick={(() => addUserProduct(product))} className="btn"><i className="fa-solid fa-person-circle-plus"></i></button>
-                    }
-
                 </CardBody>
+
+
+
             </Col>
         </Card >
     )

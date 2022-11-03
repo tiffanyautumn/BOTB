@@ -31,50 +31,52 @@ export const IngredientForm = () => {
             })
     }
     return (<>
-        <Card>
-            <CardBody>
 
-                <Form className="ingredientForm">
-                    <FormGroup>
-                        <Label for="name">Ingredient</Label>
-                        <Input
-                            id="name"
-                            name="name"
-                            type="text"
-                            value={ingredient.name}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredient }
-                                    copy.name = evt.target.value
-                                    updateIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="function">Image Link</Label>
-                        <Input
-                            id="function"
-                            name="function"
-                            type="text"
-                            value={ingredient.imageUrl}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...ingredient }
-                                    copy.imageUrl = evt.target.value
-                                    updateIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
+        <div className="ingredientform">
+            <h3>Create a new Ingredient</h3>
+
+            <Form className="ingredientForm">
+                <FormGroup>
+                    <Label for="name">Ingredient</Label>
+                    <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={ingredient.name}
+                        onChange={
+                            (evt) => {
+                                const copy = { ...ingredient }
+                                copy.name = evt.target.value
+                                updateIngredient(copy)
+                            }
+                        } />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="function">Image Link</Label>
+                    <Input
+                        id="function"
+                        name="function"
+                        type="text"
+                        value={ingredient.imageUrl}
+                        onChange={
+                            (evt) => {
+                                const copy = { ...ingredient }
+                                copy.imageUrl = evt.target.value
+                                updateIngredient(copy)
+                            }
+                        } />
+                </FormGroup>
 
 
 
-                    <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
-                        className="btn btn-primary">
-                        Save
-                    </Button>
-                </Form>
+                <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
+                    className="btn btn-primary">
+                    Save
+                </Button>
                 <Button onClick={() => navigate("/ingredient")}>Cancel</Button>
-            </CardBody>
-        </Card>
+            </Form>
+
+
+        </div>
     </>)
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Button, Table } from "reactstrap"
 import { getAllHazards } from "../../modules/hazardManager"
 import { Hazards } from "./Hazards"
+import './Hazard.css'
 
 export const HazardList = ({ isAdmin, isApproved, searchTermState }) => {
     const [hazards, setHazards] = useState([])
@@ -20,8 +21,9 @@ export const HazardList = ({ isAdmin, isApproved, searchTermState }) => {
 
 
     return (
+
         <div className="container">
-            <p className="Name panel-item">
+            <p className="hazard-header panel-item">
                 <span className="title">Hazards {isAdmin ? <button onClick={(() => navigate('/hazard/create'))} className="btn"><i className="fa-solid fa-plus"></i></button> : ""}
                     {
                         isAdmin &&
@@ -42,5 +44,6 @@ export const HazardList = ({ isAdmin, isApproved, searchTermState }) => {
             </div>
 
         </div>
+
     )
 }

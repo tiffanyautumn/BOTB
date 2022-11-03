@@ -22,7 +22,7 @@ export const HazardForm = () => {
 
         return addHazard(hazardToSend)
             .then(() => {
-                navigate("/type")
+                navigate("/hazard")
             })
     }
     return (<>
@@ -67,7 +67,7 @@ export const HazardForm = () => {
                         Save
                     </Button>
                 </Form>
-                <Button onClick={() => navigate("/type")}>Cancel</Button>
+                <Button onClick={() => navigate("/hazard")}>Cancel</Button>
             </CardBody>
         </Card>
     </>)

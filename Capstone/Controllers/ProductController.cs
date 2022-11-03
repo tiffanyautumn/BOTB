@@ -32,6 +32,18 @@ namespace Capstone.Controllers
             return Ok(_productRepository.GetProductById(id));
         }
 
+        [HttpGet("brand/{id}")]
+        public IActionResult GetByBrandId(int id)
+        {
+            return Ok(_productRepository.GetProductByBrandId(id));
+        }
+
+        [HttpGet("type/{id}")]
+        public IActionResult GetByTypeId(int id)
+        {
+            return Ok(_productRepository.GetProductByTypeId(id));
+        }
+
         [HttpPost]
         public IActionResult Post(Product product)
         {

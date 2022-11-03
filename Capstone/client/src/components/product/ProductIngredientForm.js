@@ -46,66 +46,68 @@ export const ProductIngredientForm = ({ product, setFormActive, getProduct, getP
             })
     }
     return (<>
-        <Card>
-            <CardBody>
+
+        <div className="productingredientform">
+
+            <span className="title">Add an Ingredient</span>
+            <FormGroup>
+                <Label for="ingredientSelect">Ingredient</Label>
+                <Input
+                    id="ingredientSelect"
+                    name="ingredientId"
+                    type="select"
+                    onChange={
+                        (evt) => {
+                            const copy = { ...productIngredient }
+                            copy.ingredientId = evt.target.value
+                            updateProductIngredient(copy)
+                        }
+                    }>
+                    <option>choose an ingredient</option>
+                    {ingredients.map((i) => (
+                        <option value={i.id} key={i.id}>{i.name}</option>
+                    ))}
+                </Input>
+            </FormGroup>
+            <Form className="ingredientForm">
                 <FormGroup>
-                    <Label for="ingredientSelect">Ingredient</Label>
+                    <Label for="activeIngredient">Active</Label>
                     <Input
-                        id="ingredientSelect"
-                        name="ingredientId"
-                        type="select"
+                        id="activeIngredient"
+                        name="activeIngredient"
+                        type="checkbox"
+                        value={productIngredient.activeIngredient}
                         onChange={
                             (evt) => {
                                 const copy = { ...productIngredient }
-                                copy.ingredientId = evt.target.value
+                                copy.activeIngredient = evt.target.checked
                                 updateProductIngredient(copy)
                             }
-                        }>
-                        <option>choose an ingredient</option>
-                        {ingredients.map((i) => (
-                            <option value={i.id} key={i.id}>{i.name}</option>
-                        ))}
-                    </Input>
+                        } />
                 </FormGroup>
-                <Form className="ingredientForm">
-                    <FormGroup>
-                        <Label for="activeIngredient">Active</Label>
-                        <Input
-                            id="activeIngredient"
-                            name="activeIngredient"
-                            type="checkbox"
-                            value={productIngredient.activeIngredient}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...productIngredient }
-                                    copy.activeIngredient = evt.target.checked
-                                    updateProductIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="order">Order</Label>
-                        <Input
-                            id="order"
-                            name="order"
-                            type="number"
-                            value={productIngredient.order}
-                            onChange={
-                                (evt) => {
-                                    const copy = { ...productIngredient }
-                                    copy.order = evt.target.value
-                                    updateProductIngredient(copy)
-                                }
-                            } />
-                    </FormGroup>
+                <FormGroup>
+                    <Label for="order">Order</Label>
+                    <Input
+                        id="order"
+                        name="order"
+                        type="number"
+                        value={productIngredient.order}
+                        onChange={
+                            (evt) => {
+                                const copy = { ...productIngredient }
+                                copy.order = evt.target.value
+                                updateProductIngredient(copy)
+                            }
+                        } />
+                </FormGroup>
 
-                    <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
-                        className="btn btn-primary">
-                        Save
-                    </Button>
-                </Form>
-                <Button onClick={() => setFormActive(false)}>Cancel</Button>
-            </CardBody>
-        </Card>
+                <Button onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
+                    className="btn btn-primary">
+                    Save
+                </Button>
+            </Form>
+            <Button onClick={() => setFormActive(false)}>Cancel</Button>
+
+        </div>
     </>)
 }

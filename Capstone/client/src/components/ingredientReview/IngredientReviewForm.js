@@ -116,8 +116,9 @@ export const IngredientReviewForm = () => {
                         className="btn btn-primary">
                         Save
                     </Button>
+                    <Button onClick={() => navigate(`/ingredient/${ingredientId}`)}>Cancel</Button>
                 </Form>
-                <Button onClick={() => navigate(`/ingredient/${ingredientId}`)}>Cancel</Button>
+
             </CardBody>
         </Card>
     </>)

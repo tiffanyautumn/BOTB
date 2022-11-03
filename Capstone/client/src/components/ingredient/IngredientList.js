@@ -32,11 +32,7 @@ export const IngredientList = ({ isAdmin, isApproved, searchTermState }) => {
 
     return (
         <div className="container">
-            {
-                isAdmin
-                    ? <Button onClick={() => navigate('/ingredient/create')}>Create an Ingredient</Button>
-                    : ""
-            }
+
 
             <Table>
                 <thead>

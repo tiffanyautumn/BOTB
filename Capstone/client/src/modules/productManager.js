@@ -11,6 +11,16 @@ export const getProductById = (id) => {
         .then((res) => res.json())
 }
 
+export const getProductByBrandId = (id) => {
+    return fetch(`/api/product/brand/${id}`)
+        .then((res) => res.json())
+}
+
+export const getProductByTypeId = (id) => {
+    return fetch(`/api/product/type/${id}`)
+        .then((res) => res.json())
+}
+
 export const addProduct = (product) => {
     return fetch(baseUrl, {
         method: "POST",

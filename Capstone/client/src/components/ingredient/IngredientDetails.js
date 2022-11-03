@@ -71,72 +71,67 @@ export const IngredientDetails = ({ isAdmin, isApproved }) => {
         </>
     }
     return <>
+        <section className="isection">
+            <div className="ingredientdetails">
+                <div>
 
 
-        <div className="row justify-content-center">
-            {/* <Card style={{ width: '18rem', height: '18rem' }}>
 
-                {/* <CardImg top width="auto" src={ingredient?.imageUrl} alt="Card image cap" /> */}
+                    <section className="ingredient-details">
+                        <p className="Name panel-item">
+                            <span className="title-header">{ingredient?.name}
+                                {isApproved ? <button className="btn" onClick={(() => navigate(`/ingredient/edit/${ingredient.id}`))}><i className="fa-solid fa-eye-dropper"></i></button> : ""}
 
-            {/* </Card> */}
-            <Card key={ingredient.id} style={{
-                width: '75%'
-            }}
-            >
-                <Col>
-                    <CardBody>
-                        <section className="ingredient-details">
-                            <p className="Name panel-item">
-                                <span className="title">{ingredient?.name}
-                                    {isApproved ? <button className="btn" onClick={(() => navigate(`/ingredient/edit/${ingredient.id}`))}><i className="fa-solid fa-eye-dropper"></i></button> : ""}
+                                {isAdmin ? <button onClick={(() => navigate(`/ingredient/delete/${ingredient.id}`))} className="btn"><i class="fa-solid fa-trash-can"></i></button> : ""}
+                            </span>
 
-                                    {isAdmin ? <button onClick={(() => navigate(`/ingredient/delete/${ingredient.id}`))} className="btn"><i class="fa-solid fa-trash-can"></i></button> : ""}
-                                </span>
+                        </p>
+                        <p className="Uses panel-item">
+                            <span className="title">Uses
 
-                            </p>
-                            <p className="Uses panel-item">
-                                <span className="title">Uses
-                                    <button onClick={(() => setUseForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button>
-                                    {isAdmin ? <button onClick={(() => setUseDelete(!useDelete))} className="btn"><i class="fa-solid fa-trash-can"></i></button> : ""}
-                                </span>
-                                {
-                                    useForm ? <UseForm setUseForm={setUseForm} ingredient={ingredient} getIngredient={getIngredient} getUses={getUses} /> : ""
-                                }
-                                {uses.map((u) => (<Use use={u} getUses={getUses} useDelete={useDelete} />))}
-                            </p>
-                            <p className="Hazards panel-item">
-                                <span className="title">Hazards
-                                    <button onClick={(() => setHazardForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button>
-                                    {isAdmin ? <button onClick={(() => setHazardDelete(!hazardDelete))} className="btn"><i class="fa-solid fa-trash-can"></i></button> : ""}
+                                {isAdmin ? <><button onClick={(() => setUseDelete(!useDelete))} className="btn"><i class="fa-solid fa-trash-can"></i></button>
+                                    <button onClick={(() => setUseForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button></>
+                                    : ""}
+                            </span>
+                            {
+                                useForm ? <UseForm setUseForm={setUseForm} ingredient={ingredient} getIngredient={getIngredient} getUses={getUses} /> : ""
+                            }
+                            {uses.map((u) => (<Use use={u} getUses={getUses} useDelete={useDelete} />))}
+                        </p>
+                        <p className="Hazards panel-item">
+                            <span className="title">Hazards
 
-                                </span>
-                                {hazardForm ? <IngredientHazardForm hazards={hazards} getIngredientHazards={getIngredientHazards} setHazardForm={setHazardForm} ingredient={ingredient} getIngredient={getIngredient} /> : ""}
-                                {ingredientHazards.map((h) => (<IngredientHazard hazard={h} hazardDelete={hazardDelete} getIngredientHazards={getIngredientHazards} />))}
-                            </p>
-                            <p className="Review panel-item">
-                                <span className="title">Our Review {
-                                    isApproved && !ingredient.ingredientReview
-                                        ? <button onClick={(() => navigate(`/ingredientReview/create/${ingredientId}`))} className="btn"><i className="fa-solid fa-plus"></i></button>
-                                        : ""
-                                }</span>
-                                {
-                                    ingredient.ingredientReview
-                                        ? <IngredientReview isAdmin={isAdmin} isApproved={isApproved} IngredientReview={ingredient?.ingredientReview} />
-                                        : ""
-                                }
+                                {isAdmin ? <><button onClick={(() => setHazardDelete(!hazardDelete))} className="btn"><i class="fa-solid fa-trash-can"></i></button>
+                                    <button onClick={(() => setHazardForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button> </>
+                                    : ""}
 
-                            </p>
-                        </section>
+                            </span>
+                            {hazardForm ? <IngredientHazardForm hazards={hazards} getIngredientHazards={getIngredientHazards} setHazardForm={setHazardForm} ingredient={ingredient} getIngredient={getIngredient} /> : ""}
+                            {ingredientHazards.map((h) => (<IngredientHazard hazard={h} hazardDelete={hazardDelete} getIngredientHazards={getIngredientHazards} />))}
+                        </p>
+                        <p className="Review panel-item">
+                            <span className="title">Our Review {
+                                isApproved && !ingredient.ingredientReview
+                                    ? <button onClick={(() => navigate(`/ingredientReview/create/${ingredientId}`))} className="btn"><i className="fa-solid fa-plus"></i></button>
+                                    : ""
+                            }</span>
+                            {
+                                ingredient.ingredientReview
+                                    ? <IngredientReview isAdmin={isAdmin} isApproved={isApproved} IngredientReview={ingredient?.ingredientReview} />
+                                    : ""
+                            }
+
+                        </p>
+                    </section>
 
 
 
 
 
-                    </CardBody>
-                </Col>
-            </Card >
 
-        </div>
+                </div>
 
+            </div>
+        </section>
     </>
 }
