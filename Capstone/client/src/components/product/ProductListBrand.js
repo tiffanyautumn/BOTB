@@ -23,15 +23,17 @@ export const ProductListBrand = () => {
     }, []);
 
     return <>
-        <section className="products-header">
-            <h3>{brand.name} Products</h3>
-        </section>
+        <div className="pl-section">
+            <section className="products-header">
+                <h3>{brand.name} Products</h3>
+            </section>
 
-        <div className="container-p">
-            {products.map((p) => {
-                return <div ><Product key={p.id} product={p} /></div>
-            })
-            }
+            <div className="container-p">
+                {products.map((p) => {
+                    return <div key={p.id} ><Product key={p.id} product={p} /></div>
+                })
+                }
+            </div>
         </div>
     </>
 }

@@ -4,7 +4,7 @@ import { Button } from "reactstrap"
 import { deleteIngredientReview, getIngredientReviewById } from "../../modules/ingredientReviewManager"
 import { deleteProductIngredient, getProductIngredientById } from "../../modules/productIngredientManager"
 
-export const ProductIngredientDelete = ({ ProductIngredient, setDeleteActive, getProduct }) => {
+export const ProductIngredientDelete = ({ ProductIngredient, setDeleteActive, getProduct, getPIs }) => {
     const [productIngredient, setProductIngredient] = useState([])
     const navigate = useNavigate()
 
@@ -23,6 +23,7 @@ export const ProductIngredientDelete = ({ ProductIngredient, setDeleteActive, ge
             .then(() => {
                 getProduct()
                 setDeleteActive(false)
+                getPIs()
             })
     }
     return <>

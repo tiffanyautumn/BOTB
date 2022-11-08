@@ -105,8 +105,9 @@ export const ProductIngredientForm = ({ product, setFormActive, getProduct, getP
                     className="btn btn-primary">
                     Save
                 </Button>
+                <Button onClick={() => setFormActive(false)}>Cancel</Button>
+
             </Form>
-            <Button onClick={() => setFormActive(false)}>Cancel</Button>
 
         </div>
     </>)

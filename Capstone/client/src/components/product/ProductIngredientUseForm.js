@@ -66,8 +66,9 @@ export const PIUseForm = ({ setUseForm, ProductIngredient, getPIs }) => {
                         className="btn btn-primary">
                         Save
                     </Button>
+                    <Button onClick={() => setUseForm(false)}>Cancel</Button>
                 </Form>
-                <Button onClick={() => setUseForm(false)}>Cancel</Button>
+
             </CardBody>
         </Card>
     </>)

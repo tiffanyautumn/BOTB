@@ -48,7 +48,7 @@ export const Home = ({ isAdmin, isApproved }) => {
             <div className="typeboxs">
                 {
                     types.map((t) => {
-                        return <p className="typewrappera"><button className="btn" onClick={(() => navigate(`/product/type/${t.id}`))}>{t.name}</button></p>
+                        return <p key={t.id} className="typewrappera"><button className="btn" onClick={(() => navigate(`/product/type/${t.id}`))}>{t.name}</button></p>
                     })
                 }
             </div>
@@ -59,7 +59,7 @@ export const Home = ({ isAdmin, isApproved }) => {
             <div className="typeboxs">
                 {
                     brands.map((b) => {
-                        return <p className="typewrappera"><button key={b.id} className="btn" onClick={(() => navigate(`/product/brand/${b.id}`))}>{b.name}</button></p>
+                        return <p key={b.id} className="typewrappera"><button key={b.id} className="btn" onClick={(() => navigate(`/product/brand/${b.id}`))}>{b.name}</button></p>
                     })
                 }
             </div>

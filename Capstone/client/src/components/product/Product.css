@@ -40,6 +40,7 @@
     text-align: center;
     background-color: #e3a26d;
     width: 65%;
+    align-self: center;
 }
 
 .productIngredientList {
@@ -141,5 +142,11 @@
 
 .psection {
     display: flex;
+    justify-content: center;
+}
+
+.pl-section {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
 }

@@ -48,8 +48,9 @@ export const TypeForm = () => {
                         className="btn btn-primary">
                         Save
                     </Button>
+                    <Button onClick={() => navigate("/type")}>Cancel</Button>
                 </Form>
-                <Button onClick={() => navigate("/type")}>Cancel</Button>
+
             </CardBody>
         </Card>
     </>)

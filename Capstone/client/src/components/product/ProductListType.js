@@ -25,16 +25,18 @@ export const ProductListType = () => {
     }, []);
 
     return <>
-        <section className="products-header">
-            <h3>{type.name} Products</h3>
-        </section>
+        <div className="pl-section">
+            <section className="products-header">
+                <h3>{type.name} Products</h3>
+            </section>
 
 
-        <div className="container-p">
-            {products.map((p) => {
-                return <Product product={p} />
-            })
-            }
+            <div className="container-p">
+                {products.map((p) => {
+                    return <Product key={p.id} product={p} />
+                })
+                }
+            </div>
         </div>
     </>
 }

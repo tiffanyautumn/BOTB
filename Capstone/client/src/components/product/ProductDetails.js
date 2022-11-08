@@ -45,17 +45,16 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
                     {
                         isAdmin
                             ? <>
-                                <button className="btn" onClick={(() => navigate(`/product/delete/${product.id}`))}><i class="fa-solid fa-trash-can"></i></button>
+                                <button className="btn" onClick={(() => navigate(`/product/delete/${product.id}`))}><i className="fa-solid fa-trash-can"></i></button>
                                 <button className="btn" onClick={(() => navigate(`/product/edit/${product.id}`))}><i className="fa-solid fa-eye-dropper"></i></button></>
                             : ""
 
                     }
                 </p>
 
-                {/* <button className="btn"><i class="fa-solid fa-comment-dollar"></i></button> */}
 
                 <p className="Name panel-item">
-                    <span className="title"> {product?.name} <button onClick={(() => addUserProduct(product))} className="btn"><i class="fa-solid fa-person-circle-plus"></i></button></span>
+                    <span className="title"> {product?.name} <button onClick={(() => addUserProduct(product))} className="btn"><i className="fa-solid fa-person-circle-plus"></i></button></span>
                     <span className="title">{product?.brand?.name} </span>
                 </p>
                 <p> {product?.type?.name}</p>
@@ -74,6 +73,14 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
                     ? <button className="btn" onClick={(() => setFormActive(!formActive))}><i className="fa-solid fa-plus"></i></button>
                     : ""
             }</p>
+            <section className="piformsection">
+                {
+                    formActive
+                        ? <div className="piform"><ProductIngredientForm getPIs={getPIs} product={product} setFormActive={setFormActive} getProduct={getProduct} /></div>
+                        : ""
+
+                }
+            </section>
             <div className="productIngredientList">
 
                 <Accordion open={open} toggle={toggle}>
@@ -85,14 +92,7 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
                 </Accordion>
             </div>
 
-            <section className="piformsection">
-                {
-                    formActive
-                        ? <div className="piform"><ProductIngredientForm getPIs={getPIs} product={product} setFormActive={setFormActive} getProduct={getProduct} /></div>
-                        : ""
 
-                }
-            </section>
         </section>
 
 

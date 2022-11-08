@@ -75,8 +75,9 @@ export const IngredientHazardForm = ({ setHazardForm, ingredient, getIngredient,
                         className="btn btn-primary">
                         Save
                     </Button>
+                    <Button onClick={() => setHazardForm(false)}>Cancel</Button>
                 </Form>
-                <Button onClick={() => setHazardForm(false)}>Cancel</Button>
+
             </CardBody>
         </Card>
     </>)

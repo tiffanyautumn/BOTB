@@ -53,8 +53,9 @@ export const UseForm = ({ setUseForm, ingredient, getIngredient, getUses }) => {
                         className="btn btn-primary">
                         Save
                     </Button>
+                    <Button onClick={() => setUseForm(false)}>Cancel</Button>
                 </Form>
-                <Button onClick={() => setUseForm(false)}>Cancel</Button>
+
             </CardBody>
         </Card>
     </>)

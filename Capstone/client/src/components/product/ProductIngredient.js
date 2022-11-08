@@ -24,7 +24,7 @@ export const ProductIngredient = ({ productIngredient, getProduct, isAdmin, isAp
                                 <span className="title"><button className="btn" onClick={(() => { navigate(`/ingredient/${productIngredient.ingredientId}`) })}> View Ingredient Details</button>
                                     {
                                         isAdmin
-                                            ? <button className="btn" onClick={(() => { setDeleteActive(true) })}><i class="fa-solid fa-trash-can"></i></button>
+                                            ? <button className="btn" onClick={(() => { setDeleteActive(true) })}><i className="fa-solid fa-trash-can"></i></button>
                                             : ""
                                     }
                                     {
@@ -44,7 +44,7 @@ export const ProductIngredient = ({ productIngredient, getProduct, isAdmin, isAp
                                     <span className="title">Uses
                                         {isAdmin ? <button onClick={(() => setUseForm(true))} className="btn"><i className="fa-solid fa-plus"></i></button> : ""}
                                     </span>
-                                    {productIngredient.uses.map((u) => { return <li>{u.description}</li> })}
+                                    {productIngredient.uses.map((u) => { return <li key={u.id}>{u.description}</li> })}
 
                                 </p>
 
@@ -62,7 +62,7 @@ export const ProductIngredient = ({ productIngredient, getProduct, isAdmin, isAp
                 }
                 {
                     deleteActive
-                        ? <td><ProductIngredientDelete ProductIngredient={productIngredient} setDeleteActive={setDeleteActive} getProduct={getProduct} /></td>
+                        ? <td><ProductIngredientDelete ProductIngredient={productIngredient} setDeleteActive={setDeleteActive} getProduct={getProduct} getPIs={getPIs} /></td>
                         : ""
                 }
                 {
