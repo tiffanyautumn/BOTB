@@ -8,34 +8,10 @@
  Cosmetic ingredients can be difficult to understand for the average consumer. This turns the shopping experience into a comparison of ‘who has the better looking bottle’. 
 
   BOTB alleviates this issue by having a growing database of products with their ingredients listed and reviewed by approved BOTB users with chemistry knowledge. These ingredient reviews explain the potential hazards of the ingredients and their uses both within the product and in general. 
-## Testing: 
-1. Clone This Repository And Change To The Directory In The Terminal.
-```
-git clone git@github.com:tiffanyautumn/nss-youdo.git
-cd nss-youdo
-```
-2.Access And Run The Database
-```
-git clone git@github.com:tiffanyautumn/nss-youdo-api.git
-json-server -p 8088 database.json -w
-```
 
-3.Launch the client.
-```
-npm install
-npm start
-```
-Admin Login
-```
-h@h.com
-```
-Regular User Login
-```
-t@t.com
-```
 ## ERD
-[DB Diagram ERD]([https://dbdiagram.io/d/62d17804cc1bc14cc5c7e8f6](https://lucid.app/lucidchart/724191d0-9b41-469d-ad40-fe5527e7397c/edit?viewport_loc=-1144%2C-252%2C3280%2C1598%2C0_0&invitationId=inv_9c86d1e9-d2ea-46d4-b1d1-a2dd41ce91fd#))
-  
+[DB Diagram ERD]([https://dbdiagram.io/d/63483812f0018a1c5ffb43d7))
+  <iframe width="560" height="315" src='https://dbdiagram.io/embed/63483812f0018a1c5ffb43d7'> </iframe>
  
 ##  Technologies Used
 ![image](https://user-images.githubusercontent.com/105528673/183157779-a08151c2-07d4-469a-b1bf-fa409416d6ea.png)
