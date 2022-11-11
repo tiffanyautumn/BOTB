@@ -10,8 +10,9 @@
   BOTB alleviates this issue by having a growing database of products with their ingredients listed and reviewed by approved BOTB users with chemistry knowledge. These ingredient reviews explain the potential hazards of the ingredients and their uses both within the product and in general. 
 
 ## ERD
+[Stretch goals (3).pdf](https://github.com/tiffanyautumn/BOTB/files/9991276/Stretch.goals.3.pdf)
 [DB Diagram ERD]([https://dbdiagram.io/d/63483812f0018a1c5ffb43d7))
-  <iframe width="560" height="315" src='https://dbdiagram.io/embed/63483812f0018a1c5ffb43d7'> </iframe>
+  
  
 ##  Technologies Used
 ![image](https://user-images.githubusercontent.com/105528673/183157779-a08151c2-07d4-469a-b1bf-fa409416d6ea.png)
@@ -28,3 +29,4 @@
 ## Contributions: 
   A huge thank you to everyone at NSS for supporting me through this project!
   
+
