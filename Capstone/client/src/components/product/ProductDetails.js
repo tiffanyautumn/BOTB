@@ -14,6 +14,7 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
     const [product, setProduct] = useState([])
     const [productIngredients, setProductIngredients] = useState([])
     const [formActive, setFormActive] = useState(false)
+    const [reviewForm, setReviewFormActive] = useState(false)
     const toggle = (id) => {
         if (open === id) {
             setOpen();
@@ -59,6 +60,7 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
                 </p>
                 <p> {product?.type?.name}</p>
                 <p>${product?.price?.toFixed(2)}</p>
+                <button className="btn" onClick={(() => navigate)}>Add a product review</button>
 
 
             </div>
@@ -93,6 +95,9 @@ export const ProductDetails = ({ isAdmin, isApproved }) => {
             </div>
 
 
+        </section>
+        <section>
+            <h3>Product Reviews</h3>
         </section>
 
 
